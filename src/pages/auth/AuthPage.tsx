@@ -7,11 +7,20 @@ const ROLES: { key: Role; label: string }[] = [
   { key: 'admin', label: '管理员' },
 ]
 
+type FromLocation = {
+  pathname: string
+  search: string
+  hash: string
+}
+
 export default function AuthPage() {
   const { loginAs, logout, user } = useAuth()
   const navigate = useNavigate()
   const location = useLocation()
-  const state = location.state as { from?: string } | null
+  const state = location.state as { from?: FromLocation | string } | null
+  const from = state?.from
+  const to =
+    typeof from === 'string' ? from : from ? `${from.pathname}${from.search}${from.hash}` : '/'
 
   return (
     <div className="mx-auto max-w-md rounded-2xl border border-slate-200 bg-white p-6">
@@ -27,7 +36,7 @@ export default function AuthPage() {
             className="rounded-xl bg-slate-900 px-4 py-2.5 text-sm font-medium text-white"
             onClick={() => {
               loginAs(r.key)
-              navigate(state?.from ?? '/', { replace: true })
+              navigate(to, { replace: true })
             }}
           >
             以{r.label}身份登录
