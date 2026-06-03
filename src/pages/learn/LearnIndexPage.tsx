@@ -3,6 +3,10 @@ import { findUniversityCourseByProductCourseId, productCourses, reviews } from '
 
 export default function LearnIndexPage() {
   const product = productCourses[0]
+  if (!product) {
+    return <div className="text-slate-700">学习模块（空态）：暂无学习课程</div>
+  }
+
   const uni = findUniversityCourseByProductCourseId(product.id)
   const rating = uni ? reviews.find((r) => r.universityCourseId === uni.id)?.rating : null
 
