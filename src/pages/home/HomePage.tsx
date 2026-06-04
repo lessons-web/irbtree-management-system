@@ -1,3 +1,4 @@
+import EnrollmentHelpFab from './components/EnrollmentHelpFab'
 import Hero from './components/Hero'
 import LearningSummary from './components/LearningSummary'
 import PopularCourses from './components/PopularCourses'
@@ -13,6 +14,7 @@ export default function HomePage() {
       </Hero>
       <PopularCourses />
       <LearningSummary />
+      <EnrollmentHelpFab />
     </div>
   )
 }

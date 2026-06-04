@@ -7,7 +7,7 @@ export default function PublicLayout() {
   return (
     <div className="min-h-screen bg-slate-50 text-slate-800">
       <header className="sticky top-0 z-40 border-b border-slate-200 bg-white">
-        <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
+        <div className="flex w-full items-center justify-between px-6 py-4">
           <NavLink to="/" className="text-lg font-bold text-slate-900">
             IRBTree
           </NavLink>
@@ -45,7 +45,7 @@ export default function PublicLayout() {
           </div>
         </div>
       </header>
-      <main className="mx-auto max-w-6xl px-6 py-10">
+      <main className="w-full px-6 py-10">
         <Outlet />
       </main>
     </div>
