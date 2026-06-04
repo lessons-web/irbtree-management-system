@@ -10,6 +10,6 @@ describe('router', () => {
     const memoryRouter = createMemoryRouter(routes, { initialEntries: ['/'] })
 
     render(<RouterProvider router={memoryRouter} />)
-    expect(await screen.findByText('拒绝挂科，选课不踩雷')).toBeInTheDocument()
+    expect(await screen.findByRole('heading', { name: /拒绝挂科/ })).toBeInTheDocument()
   })
 })

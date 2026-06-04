@@ -1,8 +1,19 @@
-import { Link } from 'react-router'
+import { Link, useSearchParams } from 'react-router'
 import { findProductCourseByUniversityCourseId, reviews, universityCourses } from '../../domain/mockData'
 
 export default function ReviewIndexPage() {
-  const course = universityCourses[0]
+  const [params] = useSearchParams()
+  const query = params.get('query')?.trim() ?? ''
+
+  const course =
+    (query
+      ? universityCourses.find(
+          (c) =>
+            c.code.toLowerCase().includes(query.toLowerCase()) ||
+            c.name.toLowerCase().includes(query.toLowerCase()),
+        )
+      : null) ?? universityCourses[0]
+
   if (!course) {
     return <div className="text-slate-700">评课模块（空态）：暂无课程数据</div>
   }
@@ -12,6 +23,7 @@ export default function ReviewIndexPage() {
 
   return (
     <div className="space-y-3">
+      {query ? <div className="text-sm text-slate-500">搜索：{query}</div> : null}
       <div className="text-lg font-bold">
         {course.code} {course.name}
       </div>
