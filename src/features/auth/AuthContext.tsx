@@ -10,8 +10,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       loginAs: (role) =>
         setUser({
           id: 'u_mock',
-          email: 'demo@irbtree.com',
+          email: 'alex.student@irbtree.com',
           roles: [role],
+          name: 'Alex Student',
+          badgeLabel: '学生认证',
+          avatarText: 'A',
+          canAccessAdmin: true,
         }),
       logout: () => setUser(null),
     }

@@ -1,6 +1,6 @@
 import { LockKey, User as UserIcon } from '@phosphor-icons/react'
 import { useState } from 'react'
-import { useAuth } from '../../features/auth/state'
+import { getUserPresentation, useAuth } from '../../features/auth/state'
 import Modal from '../common/Modal'
 
 type LoginModalProps = {
@@ -11,6 +11,7 @@ type LoginModalProps = {
 
 export default function LoginModal({ open, onClose, onSuccess }: LoginModalProps) {
   const { loginAs, user } = useAuth()
+  const presentation = getUserPresentation(user)
   const [email, setEmail] = useState('student@uni.edu.au')
   const [password, setPassword] = useState('password123')
 
@@ -69,8 +70,8 @@ export default function LoginModal({ open, onClose, onSuccess }: LoginModalProps
         </button>
       </form>
 
-      <div className="mt-5 text-xs text-slate-500">默认账号已预填，直接点击登录即可体验。</div>
-      <div className="mt-2 text-xs text-slate-400">当前用户：{user ? user.email : '未登录'}</div>
+      <div className="mt-5 text-xs text-slate-500">默认原型账号已预填，直接点击登录即可体验。</div>
+      <div className="mt-2 text-xs text-slate-400">当前用户：{user ? `${presentation.name} · ${user.email}` : '未登录'}</div>
     </Modal>
   )
 }

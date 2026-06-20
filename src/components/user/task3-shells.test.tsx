@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from '@testing-library/react'
+import { fireEvent, render, screen, within } from '@testing-library/react'
 import { useState } from 'react'
 import { MemoryRouter } from 'react-router'
 import { describe, expect, it, vi } from 'vitest'
@@ -65,8 +65,26 @@ describe('task3 user shells', () => {
   it('falls back to the courses link instead of opening a placeholder review flow from header', () => {
     renderLoggedIn(<UserHeader onOpenLogin={vi.fn()} onOpenCompleted={vi.fn()} />)
 
-    expect(screen.getByRole('link', { name: '写评价' })).toHaveAttribute('href', '/courses')
+    expect(screen.queryByRole('link', { name: '写评价' })).not.toBeInTheDocument()
     expect(screen.queryByRole('button', { name: '写评价' })).not.toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: '已修课程' })).not.toBeInTheDocument()
+    expect(screen.queryByRole('link', { name: '我的' })).not.toBeInTheDocument()
+    expect(screen.getByText('消息中心')).toBeInTheDocument()
+    expect(screen.getByText('Alex Student')).toBeInTheDocument()
+    expect(screen.getByText('学生认证')).toBeInTheDocument()
+    expect(screen.getByText('A')).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /alex student/i })).not.toHaveClass('border')
+  })
+
+  it('opens the logged-in user dropdown with admin, profile and logout entries', () => {
+    renderLoggedIn(<UserHeader onOpenLogin={vi.fn()} onOpenCompleted={vi.fn()} />)
+
+    fireEvent.click(screen.getByRole('button', { name: /alex student/i }))
+
+    const menu = screen.getByRole('menu')
+    expect(within(menu).getByRole('link', { name: '进入 Admin 系统' })).toHaveAttribute('href', '/admin')
+    expect(within(menu).getByRole('link', { name: '个人中心' })).toHaveAttribute('href', '/profile')
+    expect(within(menu).getByRole('menuitem', { name: '退出登录' })).toBeInTheDocument()
   })
 
   it('submits mock login and closes the modal', () => {
@@ -77,7 +95,7 @@ describe('task3 user shells', () => {
     fireEvent.click(screen.getByRole('button', { name: '立即登录' }))
 
     expect(handleClose).toHaveBeenCalled()
-    expect(screen.getByText(/当前用户：demo@irbtree.com/i)).toBeInTheDocument()
+    expect(screen.getByText(/当前用户：Alex Student · alex\.student@irbtree\.com/i)).toBeInTheDocument()
   })
 
   it('submits review payload from the drawer', () => {

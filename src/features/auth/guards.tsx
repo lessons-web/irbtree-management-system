@@ -44,7 +44,7 @@ export function RequireRole({ anyOf }: { anyOf: Role[] }) {
     )
   }
 
-  const ok = user.roles.some((r) => anyOf.includes(r))
+  const ok = user.canAccessAdmin || user.roles.some((r) => anyOf.includes(r))
   if (!ok) return <Navigate to="/" replace />
 
   return <Outlet />

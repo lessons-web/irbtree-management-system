@@ -40,7 +40,7 @@ describe('router', () => {
 
     render(<RouterProvider router={memoryRouter} />)
 
-    fireEvent.click(await screen.findByRole('button', { name: '以学生身份登录' }))
+    fireEvent.click(await screen.findByRole('button', { name: '进入演示系统' }))
     await act(async () => {
       await memoryRouter.navigate('/course/COMP9021')
     })
@@ -67,7 +67,7 @@ describe('router', () => {
 
     render(<RouterProvider router={memoryRouter} />)
 
-    fireEvent.click(await screen.findByRole('button', { name: '以学生身份登录' }))
+    fireEvent.click(await screen.findByRole('button', { name: '进入演示系统' }))
 
     await act(async () => {
       await memoryRouter.navigate('/review/COMP9021')
@@ -97,7 +97,7 @@ describe('router', () => {
 
     render(<RouterProvider router={memoryRouter} />)
 
-    fireEvent.click(await screen.findByRole('button', { name: '以学生身份登录' }))
+    fireEvent.click(await screen.findByRole('button', { name: '进入演示系统' }))
 
     await act(async () => {
       await memoryRouter.navigate('/review/COMP9021?from=legacy#notes')
@@ -138,5 +138,21 @@ describe('router', () => {
     expect(memoryRouter.state.location.search).toBe('?query=COMP9311&page=2')
     expect(memoryRouter.state.location.hash).toBe('#filters')
     expect(screen.getByLabelText('搜索课程')).toHaveValue('COMP9311')
+  })
+
+  it('lets the fixed demo account reach the admin system after login', async () => {
+    const routes = (router as unknown as { routes: RouteObject[] }).routes
+    const memoryRouter = createMemoryRouter(routes, { initialEntries: ['/auth'] })
+
+    render(<RouterProvider router={memoryRouter} />)
+
+    fireEvent.click(await screen.findByRole('button', { name: '进入演示系统' }))
+
+    await act(async () => {
+      await memoryRouter.navigate('/admin')
+    })
+
+    expect(await screen.findByText('IRBTree Admin')).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: '工作台' })).toBeInTheDocument()
   })
 })
