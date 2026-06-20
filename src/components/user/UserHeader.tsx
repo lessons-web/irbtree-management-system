@@ -37,22 +37,22 @@ export default function UserHeader({ onOpenLogin, onOpenReview, onOpenCompleted 
   }, [menuOpen])
 
   return (
-    <header className="sticky top-0 z-40 border-b border-slate-200 bg-white">
-      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
+    <header className="sticky top-0 z-40 border-b border-slate-200/80 bg-white/95 backdrop-blur">
+      <div className="mx-auto flex h-14 max-w-[1120px] items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
         <NavLink to="/" className="flex items-center gap-2 text-slate-900">
-          <img src="/favicon.svg" alt="" aria-hidden="true" className="h-8 w-8" />
-          <span className="text-xl font-bold tracking-tight">IRBTree Forum</span>
+          <img src="/favicon.svg" alt="" aria-hidden="true" className="h-7 w-7" />
+          <span className="text-lg font-bold tracking-tight">IRBTree Forum</span>
         </NavLink>
 
-        <nav className="hidden h-16 space-x-8 md:flex">
+        <nav className="hidden h-14 space-x-8 md:flex">
           {navItems.map((item) => (
             <NavLink
               key={item.to}
               to={item.to}
               end={item.end}
               className={({ isActive }) =>
-                `relative flex h-16 items-center border-b-4 px-1 pt-1 text-sm font-medium transition ${
-                  isActive ? 'border-indigo-600 text-indigo-600' : 'border-transparent text-slate-500 hover:border-slate-300 hover:text-slate-900'
+                `relative flex h-14 items-center border-b-2 px-1 pt-1 text-sm font-medium transition ${
+                  isActive ? 'border-slate-900 text-slate-900' : 'border-transparent text-slate-500 hover:border-slate-300 hover:text-slate-800'
                 }`
               }
             >
@@ -71,19 +71,20 @@ export default function UserHeader({ onOpenLogin, onOpenReview, onOpenCompleted 
             <div ref={menuRef} className="relative flex items-center gap-4">
               <button
                 type="button"
-                className="hidden items-center gap-2 p-2 text-sm font-medium text-slate-500 transition hover:text-indigo-600 md:inline-flex"
+                className="hidden items-center gap-2 p-2 text-sm font-medium text-slate-500 transition hover:text-slate-800 md:inline-flex"
                 aria-label="消息中心"
               >
-                <span className="relative inline-flex h-9 w-9 items-center justify-center rounded-full text-slate-600 transition hover:bg-slate-50">
+                <span className="relative inline-flex h-8 w-8 items-center justify-center rounded-full text-slate-500 transition hover:bg-slate-50">
                   <Bell size={18} />
                   <span className="absolute top-1.5 right-1.5 h-2.5 w-2.5 rounded-full bg-rose-500 ring-2 ring-white" />
                 </span>
+                <span>消息中心</span>
               </button>
 
               <div className="hidden items-end gap-3 lg:flex">
                 <div className="flex flex-col items-end">
-                  <span className="text-base font-semibold text-slate-900">{presentation.name}</span>
-                  <span className="mt-1 inline-flex items-center gap-1 rounded-full bg-indigo-50 px-2 py-0.5 text-xs font-medium text-indigo-600">
+                  <span className="text-sm font-semibold text-slate-900">{presentation.name}</span>
+                  <span className="mt-1 inline-flex items-center gap-1 rounded-full bg-indigo-50 px-2 py-0.5 text-[11px] font-medium text-indigo-600">
                     <ShieldCheck size={12} weight="fill" />
                     {presentation.badgeLabel}
                   </span>
@@ -92,13 +93,13 @@ export default function UserHeader({ onOpenLogin, onOpenReview, onOpenCompleted 
 
               <button
                 type="button"
-                className="flex items-center gap-2 bg-transparent text-left transition hover:text-indigo-600"
+                className="flex items-center gap-2 bg-transparent text-left transition hover:text-slate-800"
                 onClick={() => setMenuOpen((current) => !current)}
                 aria-haspopup="menu"
                 aria-expanded={menuOpen}
                 aria-label={`${presentation.name} 用户菜单`}
               >
-                <span className="inline-flex h-11 w-11 items-center justify-center rounded-full border-2 border-indigo-500 bg-white text-base font-semibold text-indigo-600">
+                <span className="inline-flex h-10 w-10 items-center justify-center rounded-full border-2 border-indigo-500 bg-white text-sm font-semibold text-indigo-600">
                   {presentation.avatarText}
                 </span>
                 <CaretDown size={14} className={`text-slate-400 transition ${menuOpen ? 'rotate-180' : ''}`} />

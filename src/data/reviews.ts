@@ -1,4 +1,4 @@
-import type { ReviewEntry, ReviewTerm } from '../features/review/types'
+import type { ReviewEntry, ReviewReply, ReviewTerm } from '../features/review/types'
 
 export type CourseReviewRecord = {
   id: string
@@ -11,6 +11,7 @@ export type CourseReviewRecord = {
   tags: string[]
   content: string
   likes: number
+  replies?: ReviewReply[]
 }
 
 export const reviewTagOptions = ['较友好', '避雷', '作业多', '考试难', '干货满满', '项目实用', '就业向']
@@ -23,7 +24,7 @@ export function toReviewEntry(record: CourseReviewRecord): ReviewEntry {
   return {
     ...record,
     isLiked: false,
-    replies: [],
+    replies: record.replies ?? [],
   }
 }
 
@@ -31,14 +32,33 @@ export const courseReviewRecords: CourseReviewRecord[] = [
   createCourseReviewRecord({
     id: 'review-uc-9021-1',
     universityCourseId: 'uc_9021',
-    user: 'Mia',
-    year: '2025',
-    term: 'T2',
-    date: '2025-09-18',
-    rating: 4.8,
+    user: 'Alex',
+    year: '2024',
+    term: 'T3',
+    date: '2024-12-10',
+    rating: 5,
     tags: ['干货满满', '作业多'],
-    content: '非常适合打基础，作业量不小，但每次做完都能明显感觉到编码能力提升。',
-    likes: 32,
+    content: '课程内容非常扎实，Eric 老师讲得很好，但是作业量真的很大，建议提前预习。',
+    likes: 12,
+    replies: [
+      {
+        user: 'Eric',
+        date: '2024-12-11',
+        content: '感谢你的认可，作业确实有点多，加油！',
+      },
+    ],
+  }),
+  createCourseReviewRecord({
+    id: 'review-uc-9021-2',
+    universityCourseId: 'uc_9021',
+    user: 'Sarah',
+    year: '2024',
+    term: 'T1',
+    date: '2024-05-20',
+    rating: 4.6,
+    tags: ['水课', '给分好'],
+    content: '对于没有编程基础的人来说有点难，需要花大量时间练习，不过整体收获很大。',
+    likes: 8,
   }),
   createCourseReviewRecord({
     id: 'review-uc-9311-1',

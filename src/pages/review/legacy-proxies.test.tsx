@@ -40,8 +40,8 @@ describe('review legacy proxies', () => {
     )
 
     expect(await screen.findByRole('heading', { name: /COMP9021 Principles of Programming/i })).toBeInTheDocument()
-    expect(screen.getByText('关联学习课')).toBeInTheDocument()
-    expect(screen.getByText('红黑树 COMP9021 学习课')).toBeInTheDocument()
+    expect(screen.getByText('学生评价')).toBeInTheDocument()
+    expect(screen.getByText('前置要求：')).toBeInTheDocument()
   })
 
   it('keeps legacy review drawer as a thin wrapper over the shared drawer shell', () => {

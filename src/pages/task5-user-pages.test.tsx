@@ -64,12 +64,11 @@ describe('task5 user pages', () => {
     expect(await screen.findByRole('heading', { name: /COMP9021 Principles of Programming/i })).toBeInTheDocument()
     expect(screen.getByText('课程简介')).toBeInTheDocument()
     expect(screen.getByText('综合评分')).toBeInTheDocument()
-    expect(screen.getByText('同学评价')).toBeInTheDocument()
-    expect(screen.getByText('关联学习课')).toBeInTheDocument()
-    expect(screen.getByText('红黑树 COMP9021 学习课')).toBeInTheDocument()
-    expect(screen.getByText('已报名学习')).toBeInTheDocument()
+    expect(screen.getByText('学生评价')).toBeInTheDocument()
+    expect(screen.getByText('前置要求：')).toBeInTheDocument()
+    expect(screen.getByText('课程标签：')).toBeInTheDocument()
 
-    fireEvent.click(screen.getAllByRole('button', { name: '写评价' })[0])
+    fireEvent.click(screen.getByRole('button', { name: '写评价' }))
 
     expect(await screen.findByRole('dialog', { name: '写评价' })).toBeInTheDocument()
   })

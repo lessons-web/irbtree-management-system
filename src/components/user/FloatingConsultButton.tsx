@@ -14,7 +14,7 @@ export default function FloatingConsultButton() {
   return (
     <div className="fixed right-6 bottom-6 z-30">
       {open ? (
-        <section className="absolute right-0 bottom-[72px] w-[356px] overflow-hidden rounded-[28px] border border-slate-200 bg-white shadow-xl shadow-slate-950/10">
+        <section className="absolute right-0 bottom-[64px] w-[336px] overflow-hidden rounded-[24px] border border-slate-200 bg-white shadow-xl shadow-slate-950/10">
           <div className="flex items-start justify-between gap-4 px-6 pt-6">
             <div>
               <h3 className="text-base font-semibold text-slate-900">联系教务完成报名</h3>
@@ -75,11 +75,11 @@ export default function FloatingConsultButton() {
 
       <button
         type="button"
-        className="fixed right-6 bottom-6 inline-flex items-center gap-2 rounded-full bg-slate-900 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-slate-900/25 transition hover:bg-slate-800"
+        className="fixed right-6 bottom-6 inline-flex items-center gap-2 rounded-full bg-slate-950 px-4 py-2.5 text-xs font-semibold text-white shadow-lg shadow-slate-900/25 transition hover:bg-slate-900"
         onClick={() => setOpen((current) => !current)}
         aria-label="报名咨询"
       >
-        <ChatsCircle size={22} weight="fill" />
+        <ChatsCircle size={18} weight="fill" />
         报名咨询
       </button>
     </div>

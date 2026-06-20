@@ -46,19 +46,19 @@ describe('router', () => {
     })
 
     expect(await screen.findByRole('heading', { name: /COMP9021 Principles of Programming/i })).toBeInTheDocument()
-    expect(screen.getByText('1 条评价')).toBeInTheDocument()
+    expect(screen.getByText('2 条评价')).toBeInTheDocument()
 
     fireEvent.click(screen.getAllByRole('button', { name: '写评价' })[0])
     const reviewDialog = await screen.findByRole('dialog', { name: '写评价' })
     fireEvent.change(within(reviewDialog).getByLabelText('评论内容'), { target: { value: '跨页状态复用集成测试新增的一条评价内容。' } })
     fireEvent.click(within(reviewDialog).getByRole('button', { name: '提交评价' }))
 
-    expect(await screen.findByText('2 条评价')).toBeInTheDocument()
+    expect(await screen.findByText('3 条评价')).toBeInTheDocument()
 
     fireEvent.click(screen.getByRole('link', { name: 'IRBTree Forum' }))
 
     const homeCourseCard = await screen.findByRole('link', { name: /COMP9021/i })
-    expect(within(homeCourseCard).getByText('2 条评价')).toBeInTheDocument()
+    expect(within(homeCourseCard).getByText('3 条评价')).toBeInTheDocument()
   })
 
   it('keeps alias routes landing on the new implementations', async () => {
@@ -74,7 +74,7 @@ describe('router', () => {
     })
 
     expect(await screen.findByRole('heading', { name: /COMP9021 Principles of Programming/i })).toBeInTheDocument()
-    expect(screen.getByText('关联学习课')).toBeInTheDocument()
+    expect(screen.getByText('学生评价')).toBeInTheDocument()
 
     await act(async () => {
       await memoryRouter.navigate('/me')
