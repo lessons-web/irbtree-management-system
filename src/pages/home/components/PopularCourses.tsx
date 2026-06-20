@@ -15,7 +15,7 @@ export default function PopularCourses() {
           <Flame className="mr-2 h-6 w-6 text-orange-500" />
           热门课程
         </h2>
-        <Link to="/review" className="flex items-center text-sm font-medium text-indigo-700 hover:text-indigo-600">
+        <Link to="/courses" className="flex items-center text-sm font-medium text-indigo-700 hover:text-indigo-600">
           查看全部 <ArrowRight className="ml-1 h-4 w-4" />
         </Link>
       </div>
@@ -25,7 +25,7 @@ export default function PopularCourses() {
           {items.map((c) => (
             <Link
               key={c.id}
-              to={`/review?query=${encodeURIComponent(c.code)}`}
+              to={`/courses?query=${encodeURIComponent(c.code)}`}
               className="group rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-md"
             >
               <div className="flex items-start justify-between gap-4">

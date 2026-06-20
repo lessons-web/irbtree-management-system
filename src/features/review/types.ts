@@ -36,6 +36,7 @@ export type ReviewDetailRatings = {
 
 export type ReviewCourseSummary = {
   universityCourseId: Id
+  schoolId: Id
   code: string
   name: string
   uni: string
@@ -74,4 +75,3 @@ export type ReviewDrawerRatings = {
   grading: number
   harvest: number
 }
-

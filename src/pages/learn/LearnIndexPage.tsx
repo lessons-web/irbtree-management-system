@@ -16,8 +16,8 @@ export default function LearnIndexPage() {
       {uni ? (
         <div className="rounded-xl border border-slate-200 bg-white p-4">
           <div className="text-sm font-medium text-slate-800">对应评课课程：{uni.code}</div>
-          <div className="mt-1 text-sm text-slate-500">评分（Mock）：{rating ?? '-'}</div>
-          <Link to="/review" className="mt-3 inline-flex text-sm font-medium text-slate-900 underline">
+          <div className="mt-1 text-sm text-slate-500">当前评分参考：{rating ?? '-'}</div>
+          <Link to="/courses" className="mt-3 inline-flex text-sm font-medium text-slate-900 underline">
             查看评课详情
           </Link>
         </div>
