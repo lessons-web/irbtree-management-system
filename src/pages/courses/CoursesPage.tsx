@@ -73,16 +73,7 @@ export default function CoursesPage() {
   }
 
   return (
-    <div className="mx-auto max-w-7xl space-y-6">
-      <section className="rounded-[2rem] bg-gradient-to-b from-indigo-50/50 via-white to-white px-4 py-8 sm:px-6">
-        <div className="max-w-3xl">
-          <h1 className="text-3xl font-bold tracking-tight text-slate-900">课程列表</h1>
-          <p className="mt-2 text-sm leading-6 text-slate-500">
-            按课程代码、学校和评分等条件快速筛选，结合分页浏览高效比较不同课程。
-          </p>
-        </div>
-      </section>
-
+    <div className="mx-auto max-w-7xl space-y-6 py-8">
       <section className="rounded-[2rem] border border-slate-200 bg-white p-4 shadow-sm sm:p-6">
         <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
           <div className="md:col-span-1">
