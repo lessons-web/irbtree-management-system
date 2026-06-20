@@ -5,17 +5,19 @@ import ContentPlaceholderPage from '../admin/pages/content/ContentPlaceholderPag
 import ReviewsPlaceholderPage from '../admin/pages/reviews/ReviewsPlaceholderPage'
 import StudentsPlaceholderPage from '../admin/pages/students/StudentsPlaceholderPage'
 import SystemPlaceholderPage from '../admin/pages/system/SystemPlaceholderPage'
+import CourseDetailAlias from './CourseDetailAlias'
+import PathAlias from './PathAlias'
 import { AuthProvider } from '../features/auth/AuthContext'
 import { RequireAuth, RequireRole } from '../features/auth/guards'
-import { ReviewProvider } from '../features/review/ReviewContext'
+import { ReviewProvider } from '../features/review/reviewProvider'
+import UserLayout from '../layouts/UserLayout'
 import AuthPage from '../pages/auth/AuthPage'
+import CourseDetailPage from '../pages/course-detail/CourseDetailPage'
+import CoursesPage from '../pages/courses/CoursesPage'
 import HomePage from '../pages/home/HomePage'
 import LearnIndexPage from '../pages/learn/LearnIndexPage'
-import MeIndexPage from '../pages/me/MeIndexPage'
-import RecommendIndexPage from '../pages/recommend/RecommendIndexPage'
-import ReviewDetailPage from '../pages/review/ReviewDetailPage'
-import ReviewIndexPage from '../pages/review/ReviewIndexPage'
-import PublicLayout from './PublicLayout'
+import ProfilePage from '../pages/profile/ProfilePage'
+import RecommendationPage from '../pages/recommendation/RecommendationPage'
 
 export const router = createBrowserRouter([
   {
@@ -27,28 +29,29 @@ export const router = createBrowserRouter([
     ),
     children: [
       {
-        element: <PublicLayout />,
+        element: (
+          <ReviewProvider>
+            <UserLayout />
+          </ReviewProvider>
+        ),
         children: [
           { index: true, Component: HomePage },
           { path: 'auth', Component: AuthPage },
+          { path: 'review', element: <PathAlias to="/courses" /> },
+          { path: 'review/:code', Component: CourseDetailAlias },
+          { path: 'me', element: <PathAlias to="/profile" /> },
+          { path: 'recommend', element: <PathAlias to="/recommendation" /> },
+          { path: 'courses', Component: CoursesPage },
+          { path: 'course/:code', Component: CourseDetailPage },
           {
             element: <RequireAuth />,
             children: [
               {
-                path: 'review',
-                element: (
-                  <ReviewProvider>
-                    <Outlet />
-                  </ReviewProvider>
-                ),
-                children: [
-                  { index: true, Component: ReviewIndexPage },
-                  { path: ':code', Component: ReviewDetailPage },
-                ],
+                path: 'recommendation',
+                Component: RecommendationPage,
               },
-              { path: 'recommend', Component: RecommendIndexPage },
+              { path: 'profile', Component: ProfilePage },
               { path: 'learn', Component: LearnIndexPage },
-              { path: 'me', Component: MeIndexPage },
             ],
           },
         ],

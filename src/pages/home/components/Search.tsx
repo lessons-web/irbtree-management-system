@@ -14,10 +14,10 @@ export default function Search() {
       onSubmit={(e) => {
         e.preventDefault()
         if (trimmed) {
-          navigate(`/review?query=${encodeURIComponent(trimmed)}`)
+          navigate(`/courses?query=${encodeURIComponent(trimmed)}`)
           return
         }
-        navigate('/review')
+        navigate('/courses')
       }}
     >
       <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4">
@@ -40,4 +40,3 @@ export default function Search() {
     </form>
   )
 }
-

@@ -2,6 +2,34 @@ import type { CourseLink, Enrollment, ProductCourse, Review, UniversityCourse } 
 
 export const universityCourses: UniversityCourse[] = [
   {
+    id: 'uc_1511',
+    code: 'COMP1511',
+    name: 'Programming Fundamentals',
+    schoolId: 'sch_unsw',
+    termId: 'term_2024_t1',
+  },
+  {
+    id: 'uc_1131',
+    code: 'MATH1131',
+    name: 'Mathematics 1A',
+    schoolId: 'sch_unsw',
+    termId: 'term_2024_t1',
+  },
+  {
+    id: 'uc_1521',
+    code: 'COMP1521',
+    name: 'Computer Systems Fundamentals',
+    schoolId: 'sch_unsw',
+    termId: 'term_2024_t2',
+  },
+  {
+    id: 'uc_2521',
+    code: 'COMP2521',
+    name: 'Data Structures and Algorithms',
+    schoolId: 'sch_unsw',
+    termId: 'term_2024_t3',
+  },
+  {
     id: 'uc_9021',
     code: 'COMP9021',
     name: 'Principles of Programming',

@@ -24,9 +24,9 @@ export default function AuthPage() {
 
   return (
     <div className="mx-auto max-w-md rounded-2xl border border-slate-200 bg-white p-6">
-      <h1 className="text-xl font-bold">登录（Mock）</h1>
+      <h1 className="text-xl font-bold">选择登录身份</h1>
       <p className="mt-2 text-sm text-slate-500">
-        本阶段用于演示 /learn、/me、/admin 的权限行为。
+        选择身份后会回到你刚才访问的页面，继续完成学习、评课或选课相关操作。
       </p>
       <div className="mt-6 grid gap-2">
         {ROLES.map((r) => (
