@@ -39,7 +39,7 @@ export default function LoginModal({ open, onClose, onSuccess }: LoginModalProps
             <input
               id="login-email"
               type="text"
-              className="w-full rounded-2xl border border-slate-200 bg-white py-3 pr-4 pl-10 outline-none transition focus:border-indigo-300 focus:ring-4 focus:ring-indigo-100"
+              className="w-full rounded-2xl border border-slate-200 bg-white py-3 pr-4 pl-10 outline-none transition focus:border-brand-300 focus:ring-4 focus:ring-brand-100"
               value={email}
               onChange={(event) => setEmail(event.target.value)}
             />
@@ -55,7 +55,7 @@ export default function LoginModal({ open, onClose, onSuccess }: LoginModalProps
             <input
               id="login-password"
               type="password"
-              className="w-full rounded-2xl border border-slate-200 bg-white py-3 pr-4 pl-10 outline-none transition focus:border-indigo-300 focus:ring-4 focus:ring-indigo-100"
+              className="w-full rounded-2xl border border-slate-200 bg-white py-3 pr-4 pl-10 outline-none transition focus:border-brand-300 focus:ring-4 focus:ring-brand-100"
               value={password}
               onChange={(event) => setPassword(event.target.value)}
             />
@@ -64,7 +64,7 @@ export default function LoginModal({ open, onClose, onSuccess }: LoginModalProps
 
         <button
           type="submit"
-          className="inline-flex w-full items-center justify-center rounded-2xl bg-indigo-600 px-4 py-3 text-sm font-semibold text-white shadow-sm shadow-indigo-600/25 transition hover:bg-indigo-500"
+          className="inline-flex w-full items-center justify-center rounded-2xl bg-brand-600 px-4 py-3 text-sm font-semibold text-white shadow-sm shadow-brand-600/25 transition hover:bg-brand-500"
         >
           立即登录
         </button>

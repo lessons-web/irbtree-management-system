@@ -55,7 +55,7 @@ function FieldShell({ label, children }: FieldShellProps) {
 }
 
 function fieldClassName() {
-  return 'w-full rounded-xl border border-slate-200 bg-white px-4 text-sm text-slate-700 outline-none transition focus:border-indigo-400'
+  return 'w-full rounded-xl border border-slate-200 bg-white px-4 text-sm text-slate-700 outline-none transition focus:border-brand-400'
 }
 
 function Input({ label, value, onChange, placeholder, type = 'text', min }: InputProps) {
@@ -125,7 +125,7 @@ function CheckboxGroup({ label, values, options, onChange }: CheckboxGroupProps)
 
                   onChange(values.filter((value) => value !== option.value))
                 }}
-                className="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500"
+                className="rounded border-slate-300 text-brand-600 focus:ring-brand-500"
               />
               <span>{option.label}</span>
             </label>
@@ -149,7 +149,7 @@ function RadioGroup({ label, value, options, onChange, disabled = false }: Radio
               key={option.value}
               className={`flex items-start gap-3 rounded-2xl border px-4 py-3 transition ${
                 checked
-                  ? 'border-indigo-400 bg-indigo-50 text-indigo-700'
+                  ? 'border-brand-400 bg-brand-50 text-brand-700'
                   : 'border-slate-200 bg-white text-slate-700 hover:border-slate-300'
               } ${disabled ? 'cursor-not-allowed opacity-70' : 'cursor-pointer'}`}
             >
@@ -161,7 +161,7 @@ function RadioGroup({ label, value, options, onChange, disabled = false }: Radio
                 checked={checked}
                 disabled={disabled}
                 onChange={() => onChange(option.value)}
-                className="mt-1 border-slate-300 text-indigo-600 focus:ring-indigo-500"
+                className="mt-1 border-slate-300 text-brand-600 focus:ring-brand-500"
               />
               <span className="space-y-1">
                 <span className="block text-sm font-semibold">{option.label}</span>

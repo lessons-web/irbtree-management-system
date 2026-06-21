@@ -62,8 +62,8 @@ function ReviewDrawerForm({ courseName, userLabel, onClose, onSubmit }: ReviewDr
 
   return (
     <div className="space-y-6 p-6">
-      <section className="rounded-3xl border border-indigo-100 bg-indigo-50/70 p-5">
-        <div className="text-xs font-semibold tracking-wide text-indigo-600 uppercase">当前课程</div>
+      <section className="rounded-3xl border border-brand-100 bg-brand-50/70 p-5">
+        <div className="text-xs font-semibold tracking-wide text-brand-600 uppercase">当前课程</div>
         <div className="mt-2 text-lg font-semibold text-slate-900">{courseName}</div>
         <div className="mt-2 text-sm leading-6 text-slate-500">填写你的修读体验、作业压力和收获感受，帮助后来同学更快做出判断。</div>
       </section>
@@ -72,7 +72,7 @@ function ReviewDrawerForm({ courseName, userLabel, onClose, onSubmit }: ReviewDr
         <label className="text-sm font-medium text-slate-700">
           学年
           <select
-            className="mt-2 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm outline-none transition focus:border-indigo-300 focus:ring-4 focus:ring-indigo-100"
+            className="mt-2 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm outline-none transition focus:border-brand-300 focus:ring-4 focus:ring-brand-100"
             value={year}
             onChange={(event) => setYear(event.target.value)}
           >
@@ -87,7 +87,7 @@ function ReviewDrawerForm({ courseName, userLabel, onClose, onSubmit }: ReviewDr
         <label className="text-sm font-medium text-slate-700">
           学期
           <select
-            className="mt-2 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm outline-none transition focus:border-indigo-300 focus:ring-4 focus:ring-indigo-100"
+            className="mt-2 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm outline-none transition focus:border-brand-300 focus:ring-4 focus:ring-brand-100"
             value={term}
             onChange={(event) => setTerm(event.target.value as ReviewTerm)}
           >
@@ -107,14 +107,14 @@ function ReviewDrawerForm({ courseName, userLabel, onClose, onSubmit }: ReviewDr
             <label key={item.key} className="rounded-2xl border border-slate-200 bg-slate-50 p-4 text-sm font-medium text-slate-700">
               <div className="flex items-center justify-between">
                 <span>{item.label}</span>
-                <span className="text-indigo-600">{ratings[item.key]}</span>
+                <span className="text-brand-600">{ratings[item.key]}</span>
               </div>
               <input
                 type="range"
                 min={1}
                 max={5}
                 step={1}
-                className="mt-3 w-full accent-indigo-600"
+                className="mt-3 w-full accent-brand-600"
                 value={ratings[item.key]}
                 onChange={(event) =>
                   setRatings((current) => ({
@@ -139,8 +139,8 @@ function ReviewDrawerForm({ courseName, userLabel, onClose, onSubmit }: ReviewDr
                 type="button"
                 className={`rounded-full border px-3 py-2 text-sm font-medium transition ${
                   active
-                    ? 'border-indigo-200 bg-indigo-50 text-indigo-600'
-                    : 'border-slate-200 bg-white text-slate-600 hover:border-indigo-200 hover:text-indigo-600'
+                    ? 'border-brand-200 bg-brand-50 text-brand-600'
+                    : 'border-slate-200 bg-white text-slate-600 hover:border-brand-200 hover:text-brand-600'
                 }`}
                 onClick={() =>
                   setSelectedTags((current) =>
@@ -158,7 +158,7 @@ function ReviewDrawerForm({ courseName, userLabel, onClose, onSubmit }: ReviewDr
       <label className="block text-sm font-medium text-slate-700">
         评论内容
         <textarea
-          className="mt-2 min-h-36 w-full rounded-3xl border border-slate-200 bg-white px-4 py-3 text-sm leading-6 outline-none transition focus:border-indigo-300 focus:ring-4 focus:ring-indigo-100"
+          className="mt-2 min-h-36 w-full rounded-3xl border border-slate-200 bg-white px-4 py-3 text-sm leading-6 outline-none transition focus:border-brand-300 focus:ring-4 focus:ring-brand-100"
           placeholder="分享上课体验、作业情况和老师风格。"
           value={content}
           onChange={(event) => setContent(event.target.value)}
@@ -175,7 +175,7 @@ function ReviewDrawerForm({ courseName, userLabel, onClose, onSubmit }: ReviewDr
         </button>
         <button
           type="button"
-          className="rounded-full bg-indigo-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm shadow-indigo-600/25 transition hover:bg-indigo-500"
+          className="rounded-full bg-brand-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm shadow-brand-600/25 transition hover:bg-brand-500"
           onClick={() => {
             onSubmit({
               courseName,

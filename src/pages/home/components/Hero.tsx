@@ -2,22 +2,22 @@ import type { ReactNode } from 'react'
 
 export default function Hero({ children }: { children?: ReactNode }) {
   return (
-    <section className="relative -mx-6 -mt-10 overflow-hidden bg-gradient-to-b from-indigo-50/60 via-white to-white pb-16 pt-12 lg:pt-20">
+    <section className="relative -mx-6 -mt-10 overflow-hidden bg-gradient-to-b from-brand-50/60 via-white to-white pb-16 pt-12 lg:pt-20">
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
-        <div className="absolute -top-24 -left-24 h-96 w-96 rounded-full bg-indigo-100/60 blur-3xl" />
+        <div className="absolute -top-24 -left-24 h-96 w-96 rounded-full bg-brand-100/60 blur-3xl" />
         <div className="absolute top-1/2 -right-24 h-72 w-72 rounded-full bg-blue-100/60 blur-3xl" />
       </div>
 
       <div className="relative mx-auto max-w-4xl px-6 text-center">
-        <span className="mb-4 inline-flex items-center rounded-full border border-indigo-100 bg-indigo-50 px-3 py-1 text-xs font-semibold tracking-wide text-indigo-700">
+        <span className="mb-4 inline-flex items-center rounded-full border border-brand-100 bg-brand-50 px-3 py-1 text-xs font-semibold tracking-wide text-brand-700">
           2024 选课季必备
         </span>
         <h1 className="mb-4 text-4xl font-extrabold tracking-tight text-slate-900 sm:text-5xl md:text-6xl">
           拒绝挂科，
-          <span className="relative inline-block text-indigo-700">
+          <span className="relative inline-block text-brand-700">
             选课不踩雷
             <svg
-              className="absolute -bottom-1 left-0 -z-10 h-3 w-full text-indigo-200"
+              className="absolute -bottom-1 left-0 -z-10 h-3 w-full text-brand-200"
               viewBox="0 0 100 10"
               preserveAspectRatio="none"
             >

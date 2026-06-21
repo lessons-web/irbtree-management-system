@@ -448,8 +448,8 @@ export default function ReviewsAdminPage() {
         />
 
         {bulkActionIntent ? (
-          <div className="space-y-3 rounded-2xl border border-indigo-100 bg-indigo-50 p-4">
-            <p className="text-sm text-indigo-700">
+          <div className="space-y-3 rounded-2xl border border-brand-100 bg-brand-50 p-4">
+            <p className="text-sm text-brand-700">
               {bulkActionIntent === 'approve'
                 ? `确认批量通过 ${pendingRows.length} 条待复核评价？`
                 : `确认批量驳回 ${highRiskRows.length} 条高风险评价？`}
@@ -466,7 +466,7 @@ export default function ReviewsAdminPage() {
                 type="button"
                 onClick={bulkActionIntent === 'approve' ? handleBulkApprove : handleBulkReject}
                 className={`rounded-xl px-4 py-2 text-sm font-medium text-white transition ${
-                  bulkActionIntent === 'approve' ? 'bg-indigo-600 hover:bg-indigo-500' : 'bg-rose-600 hover:bg-rose-500'
+                  bulkActionIntent === 'approve' ? 'bg-brand-600 hover:bg-brand-500' : 'bg-rose-600 hover:bg-rose-500'
                 }`}
               >
                 {bulkActionIntent === 'approve' ? '确认批量通过' : '确认批量驳回'}
@@ -487,7 +487,7 @@ export default function ReviewsAdminPage() {
             type="button"
             onClick={handleStartBulkApprove}
             disabled={pendingRows.length === 0}
-            className="rounded-xl bg-indigo-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-indigo-500 disabled:cursor-not-allowed disabled:bg-indigo-300"
+            className="rounded-xl bg-brand-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-brand-500 disabled:cursor-not-allowed disabled:bg-brand-300"
           >
             批量通过待复核
           </button>

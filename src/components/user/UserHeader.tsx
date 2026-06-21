@@ -1,6 +1,7 @@
 import { Bell, CaretDown, ShieldCheck, SignOut, Sparkle, SquaresFour, UserCircle } from '@phosphor-icons/react'
 import { useEffect, useRef, useState } from 'react'
 import { NavLink } from 'react-router'
+import { useProtectedNavigation } from '../../features/auth/useProtectedNavigation'
 import { getUserPresentation, useAuth } from '../../features/auth/state'
 
 type UserHeaderProps = {
@@ -17,6 +18,7 @@ const navItems = [
 
 export default function UserHeader({ onOpenLogin, onOpenReview, onOpenCompleted }: UserHeaderProps) {
   const { user, logout } = useAuth()
+  const protectedNavigate = useProtectedNavigation()
   const presentation = getUserPresentation(user)
   const [menuOpen, setMenuOpen] = useState(false)
   const menuRef = useRef<HTMLDivElement | null>(null)
@@ -38,21 +40,26 @@ export default function UserHeader({ onOpenLogin, onOpenReview, onOpenCompleted 
 
   return (
     <header className="sticky top-0 z-40 border-b border-slate-200/80 bg-white/95 backdrop-blur">
-      <div className="mx-auto flex h-14 max-w-[1120px] items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
+      <div className="mx-auto flex h-16 max-w-[1120px] items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
         <NavLink to="/" className="flex items-center gap-2 text-slate-900">
           <img src="/favicon.svg" alt="" aria-hidden="true" className="h-7 w-7" />
           <span className="text-lg font-bold tracking-tight">IRBTree Forum</span>
         </NavLink>
 
-        <nav className="hidden h-14 space-x-8 md:flex">
+        <nav className="hidden h-16 space-x-8 md:flex">
           {navItems.map((item) => (
             <NavLink
               key={item.to}
               to={item.to}
               end={item.end}
+              onClick={(event) => {
+                if (item.to === '/' || user) return
+                event.preventDefault()
+                protectedNavigate(item.to)
+              }}
               className={({ isActive }) =>
-                `relative flex h-14 items-center border-b-2 px-1 pt-1 text-sm font-medium transition ${
-                  isActive ? 'border-slate-900 text-slate-900' : 'border-transparent text-slate-500 hover:border-slate-300 hover:text-slate-800'
+                `relative flex h-16 items-center border-b-4 px-1 pt-1 text-md transition ${
+                  isActive ? 'border-brand-600 text-brand-600 font-bold' : 'border-transparent text-slate-400 hover:text-slate-800'
                 }`
               }
             >
@@ -84,7 +91,7 @@ export default function UserHeader({ onOpenLogin, onOpenReview, onOpenCompleted 
               <div className="hidden items-end gap-3 lg:flex">
                 <div className="flex flex-col items-end">
                   <span className="text-sm font-semibold text-slate-900">{presentation.name}</span>
-                  <span className="mt-1 inline-flex items-center gap-1 rounded-full bg-indigo-50 px-2 py-0.5 text-[11px] font-medium text-indigo-600">
+                  <span className="mt-1 inline-flex items-center gap-1 rounded-full bg-brand-50 px-2 py-0.5 text-[11px] font-medium text-brand-600">
                     <ShieldCheck size={12} weight="fill" />
                     {presentation.badgeLabel}
                   </span>
@@ -99,7 +106,7 @@ export default function UserHeader({ onOpenLogin, onOpenReview, onOpenCompleted 
                 aria-expanded={menuOpen}
                 aria-label={`${presentation.name} 用户菜单`}
               >
-                <span className="inline-flex h-10 w-10 items-center justify-center rounded-full border-2 border-indigo-500 bg-white text-sm font-semibold text-indigo-600">
+                <span className="inline-flex h-10 w-10 items-center justify-center rounded-full border-2 border-brand-500 bg-white text-sm font-semibold text-brand-600">
                   {presentation.avatarText}
                 </span>
                 <CaretDown size={14} className={`text-slate-400 transition ${menuOpen ? 'rotate-180' : ''}`} />
@@ -154,14 +161,14 @@ export default function UserHeader({ onOpenLogin, onOpenReview, onOpenCompleted 
             <>
               <button
                 type="button"
-                className="px-1 py-2 text-sm font-medium text-slate-600 transition hover:text-slate-900"
+                className="cursor-pointer px-1 py-2 text-sm font-medium text-slate-600 transition hover:text-slate-900"
                 onClick={onOpenLogin}
               >
                 登录
               </button>
               <button
                 type="button"
-                className="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm transition hover:bg-indigo-500"
+                className="cursor-pointer rounded-lg bg-brand-600 px-4 py-2 text-sm font-medium text-white shadow-sm transition hover:bg-brand-500"
                 onClick={onOpenLogin}
               >
                 注册

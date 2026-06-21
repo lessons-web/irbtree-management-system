@@ -65,7 +65,7 @@ export default function CourseDetailPage() {
             <div className="mt-6 rounded-[12px] bg-slate-50 px-4 py-3">
               <div className="flex flex-wrap items-center gap-3 text-xs text-slate-500">
                 <span className="font-medium">导师</span>
-                <span className="text-base font-semibold text-indigo-600">{detail.lecturer}</span>
+                <span className="text-base font-semibold text-brand-600">{detail.lecturer}</span>
                 <span className="ml-2 font-medium">助教</span>
                 {detail.tutors.map((tutor) => (
                   <span key={tutor} className="rounded-md bg-slate-200/80 px-2 py-1 text-[11px] font-medium text-slate-600">
@@ -84,7 +84,7 @@ export default function CourseDetailPage() {
               <span className="font-semibold text-slate-700">前置要求：</span>
               {detail.prereq.length > 0 ? (
                 detail.prereq.map((item) => (
-                  <span key={item} className="inline-flex items-center rounded-md border border-indigo-200 bg-indigo-50 px-2.5 py-1 font-semibold text-indigo-500">
+                  <span key={item} className="inline-flex items-center rounded-md border border-brand-200 bg-brand-50 px-2.5 py-1 font-semibold text-brand-500">
                     {item}
                   </span>
                 ))
@@ -155,7 +155,7 @@ export default function CourseDetailPage() {
           </div>
           <button
             type="button"
-            className="inline-flex items-center gap-2 rounded-xl bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-sm shadow-indigo-600/20 transition hover:bg-indigo-500"
+            className="inline-flex items-center gap-2 rounded-xl bg-brand-600 px-4 py-2 text-sm font-semibold text-white shadow-sm shadow-brand-600/20 transition hover:bg-brand-500"
             onClick={() =>
               openReview({
                 courseName: `${detail.code} ${detail.name}`,
@@ -176,7 +176,7 @@ export default function CourseDetailPage() {
           <div className="mt-7 space-y-8">
             {detail.reviews.map((review, index) => (
               <article key={review.id} className={`${index === 0 ? '' : 'border-t border-slate-100 pt-8'} flex gap-3.5`}>
-                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-indigo-100 text-sm font-semibold text-indigo-600">
+                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-brand-100 text-sm font-semibold text-brand-600">
                   {review.user.slice(0, 1).toUpperCase()}
                 </div>
                 <div className="min-w-0 flex-1">
@@ -199,7 +199,7 @@ export default function CourseDetailPage() {
 
                   <div className="mt-3 flex flex-wrap gap-2">
                     {review.tags.map((tag) => (
-                      <span key={tag} className="text-xs font-semibold text-indigo-500">
+                      <span key={tag} className="text-xs font-semibold text-brand-500">
                         #{tag}
                       </span>
                     ))}

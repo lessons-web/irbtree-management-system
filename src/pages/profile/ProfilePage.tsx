@@ -75,11 +75,11 @@ export default function ProfilePage() {
   return (
     <div className="mx-auto max-w-6xl space-y-6 px-4 py-8 sm:px-6">
       <section className="overflow-hidden rounded-[2rem] border border-slate-200 bg-white shadow-sm shadow-slate-900/5">
-        <div className="relative bg-gradient-to-r from-indigo-600 via-indigo-500 to-sky-500 px-8 py-10 text-white">
+        <div className="relative bg-gradient-to-r from-brand-600 via-brand-500 to-sky-500 px-8 py-10 text-white">
           <div className="absolute -top-16 right-10 h-40 w-40 rounded-full bg-white/10 blur-3xl" />
           <div className="relative flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
             <div className="flex flex-col gap-5 sm:flex-row sm:items-center">
-              <div className="flex h-24 w-24 items-center justify-center rounded-full border-4 border-white/70 bg-white text-3xl font-bold text-indigo-600 shadow-lg">
+              <div className="flex h-24 w-24 items-center justify-center rounded-full border-4 border-white/70 bg-white text-3xl font-bold text-brand-600 shadow-lg">
                 {profile.name.slice(0, 1)}
               </div>
               <div className="space-y-3">
@@ -123,7 +123,7 @@ export default function ProfilePage() {
       <section className="rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm shadow-slate-900/5">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div>
-            <div className="inline-flex items-center gap-2 rounded-full bg-indigo-50 px-3 py-1 text-xs font-semibold text-indigo-600">
+            <div className="inline-flex items-center gap-2 rounded-full bg-brand-50 px-3 py-1 text-xs font-semibold text-brand-600">
               <Sparkles size={14} />
               我的选课计划
             </div>
@@ -170,7 +170,7 @@ export default function ProfilePage() {
                   key={tab.key}
                   type="button"
                   className={`inline-flex items-center gap-2 border-b-2 px-1 py-4 text-sm font-medium transition ${
-                    active ? 'border-indigo-600 text-indigo-600' : 'border-transparent text-slate-500 hover:text-slate-900'
+                    active ? 'border-brand-600 text-brand-600' : 'border-transparent text-slate-500 hover:text-slate-900'
                   }`}
                   onClick={() => {
                     const next = new URLSearchParams(params)
@@ -268,7 +268,7 @@ export default function ProfilePage() {
                 </div>
                 <button
                   type="button"
-                  className="inline-flex items-center gap-2 rounded-full bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-sm shadow-indigo-600/25 transition hover:bg-indigo-500"
+                  className="inline-flex items-center gap-2 rounded-full bg-brand-600 px-4 py-2 text-sm font-semibold text-white shadow-sm shadow-brand-600/25 transition hover:bg-brand-500"
                   onClick={() => openCompleted()}
                 >
                   添加已修课程

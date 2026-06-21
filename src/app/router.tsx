@@ -41,15 +41,15 @@ export const router = createBrowserRouter([
         children: [
           { index: true, Component: HomePage },
           { path: 'auth', Component: AuthPage },
-          { path: 'review', element: <PathAlias to="/courses" /> },
-          { path: 'review/:code', Component: CourseDetailAlias },
-          { path: 'me', element: <PathAlias to="/profile" /> },
-          { path: 'recommend', element: <PathAlias to="/recommendation" /> },
-          { path: 'courses', Component: CoursesPage },
-          { path: 'course/:code', Component: CourseDetailPage },
           {
             element: <RequireAuth />,
             children: [
+              { path: 'review', element: <PathAlias to="/courses" /> },
+              { path: 'review/:code', Component: CourseDetailAlias },
+              { path: 'me', element: <PathAlias to="/profile" /> },
+              { path: 'recommend', element: <PathAlias to="/recommendation" /> },
+              { path: 'courses', Component: CoursesPage },
+              { path: 'course/:code', Component: CourseDetailPage },
               {
                 path: 'recommendation',
                 Component: RecommendationPage,

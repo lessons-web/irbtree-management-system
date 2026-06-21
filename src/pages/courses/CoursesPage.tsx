@@ -90,7 +90,7 @@ export default function CoursesPage() {
                 value={query}
                 onChange={(event) => updateParams({ query: event.target.value.trim() || null }, true)}
                 placeholder="代码 / 名称"
-                className="block w-full rounded-xl border border-slate-300 bg-white py-2 pr-3 pl-9 text-sm text-slate-900 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 focus:outline-none"
+                className="block w-full rounded-xl border border-slate-300 bg-white py-2 pr-3 pl-9 text-sm text-slate-900 focus:border-brand-500 focus:ring-2 focus:ring-brand-100 focus:outline-none"
               />
             </div>
           </div>
@@ -103,7 +103,7 @@ export default function CoursesPage() {
               id="courses-school"
               value={schoolId}
               onChange={(event) => updateParams({ school: event.target.value }, true)}
-              className="block w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 focus:outline-none"
+              className="block w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:border-brand-500 focus:ring-2 focus:ring-brand-100 focus:outline-none"
             >
               <option value="all">全部学校</option>
               {schoolOptions.map((value) => (
@@ -122,7 +122,7 @@ export default function CoursesPage() {
               id="courses-sort"
               value={sort}
               onChange={(event) => updateParams({ sort: event.target.value }, true)}
-              className="block w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 focus:outline-none"
+              className="block w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:border-brand-500 focus:ring-2 focus:ring-brand-100 focus:outline-none"
             >
               {sortOptions.map((option) => (
                 <option key={option.value} value={option.value}>
@@ -141,7 +141,7 @@ export default function CoursesPage() {
                 id="courses-page-size"
                 value={String(pageSize)}
                 onChange={(event) => updateParams({ pageSize: event.target.value }, true)}
-                className="block w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 focus:outline-none"
+                className="block w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:border-brand-500 focus:ring-2 focus:ring-brand-100 focus:outline-none"
               >
                 {[5, 10, 20].map((value) => (
                   <option key={value} value={String(value)}>

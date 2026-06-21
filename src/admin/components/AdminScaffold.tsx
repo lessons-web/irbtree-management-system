@@ -59,7 +59,7 @@ export function AdminPageFrame({
               onChange={(event) => onQueryChange(event.target.value)}
               placeholder={searchPlaceholder}
               aria-label="搜索"
-              className="h-11 w-full rounded-xl border border-slate-200 bg-slate-50 pl-10 pr-4 text-sm text-slate-700 outline-none transition focus:border-indigo-400 focus:bg-white"
+              className="h-11 w-full rounded-xl border border-slate-200 bg-slate-50 pl-10 pr-4 text-sm text-slate-700 outline-none transition focus:border-brand-400 focus:bg-white"
             />
           </label>
           {filters ? <div className="flex flex-wrap gap-3">{filters}</div> : null}
@@ -69,7 +69,7 @@ export function AdminPageFrame({
           <button
             type="button"
             onClick={onPrimaryAction}
-            className="inline-flex h-11 items-center justify-center gap-2 rounded-xl bg-indigo-600 px-4 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-500"
+            className="inline-flex h-11 items-center justify-center gap-2 rounded-xl bg-brand-600 px-4 text-sm font-semibold text-white shadow-sm transition hover:bg-brand-500"
           >
             <Plus size={18} />
             {primaryActionLabel}
@@ -99,7 +99,7 @@ export function AdminFilterSelect({
       <select
         value={value}
         onChange={(event) => onChange(event.target.value)}
-        className="h-11 rounded-xl border border-slate-200 bg-white px-3 text-sm text-slate-700 outline-none transition focus:border-indigo-400"
+        className="h-11 rounded-xl border border-slate-200 bg-white px-3 text-sm text-slate-700 outline-none transition focus:border-brand-400"
       >
         {options.map((option) => (
           <option key={option.value} value={option.value}>
@@ -162,7 +162,7 @@ export function AdminStatusBadge({ label, tone }: { label: string; tone: AdminSt
     warning: 'bg-amber-50 text-amber-700 ring-amber-200',
     danger: 'bg-rose-50 text-rose-700 ring-rose-200',
     neutral: 'bg-slate-100 text-slate-700 ring-slate-200',
-    info: 'bg-indigo-50 text-indigo-700 ring-indigo-200',
+    info: 'bg-brand-50 text-brand-700 ring-brand-200',
   }[tone]
 
   return <span className={`inline-flex rounded-full px-2.5 py-1 text-xs font-semibold ring-1 ${classes}`}>{label}</span>

@@ -1,6 +1,6 @@
 import { ArrowRight, Sparkles } from 'lucide-react'
 import { useMemo, useState } from 'react'
-import { useNavigate } from 'react-router'
+import { useProtectedNavigation } from '../../features/auth/useProtectedNavigation'
 import { courseCatalog } from '../../data/courses'
 import { saveCoursePlan, useSavedCoursePlans } from '../../lib/coursePlans'
 import { useReview } from '../../features/review/useReview'
@@ -29,7 +29,7 @@ type RecommendationItem = {
 }
 
 export default function RecommendationPage() {
-  const navigate = useNavigate()
+  const protectedNavigate = useProtectedNavigation()
   const [step, setStep] = useState<RecommendStep>(1)
   const [engine, setEngine] = useState<RecommendEngine>('rule')
   const [year, setYear] = useState('2026')
@@ -206,8 +206,8 @@ export default function RecommendationPage() {
         </div>
         <button
           type="button"
-          className="inline-flex items-center gap-2 rounded-full bg-indigo-50 px-4 py-2 text-sm font-semibold text-indigo-600 transition hover:bg-indigo-100"
-          onClick={() => navigate('/profile?tab=completed')}
+          className="inline-flex items-center gap-2 rounded-full bg-brand-50 px-4 py-2 text-sm font-semibold text-brand-600 transition hover:bg-brand-100"
+          onClick={() => protectedNavigate('/profile?tab=completed')}
         >
           去个人中心维护已修课程
           <ArrowRight size={16} />
@@ -246,7 +246,7 @@ export default function RecommendationPage() {
       <section className="rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm shadow-slate-900/5">
         <div className="grid gap-4 md:grid-cols-5">
           <div className={`flex items-center gap-3 ${step >= 1 ? '' : 'opacity-60'}`}>
-            <div className={`flex h-10 w-10 items-center justify-center rounded-full text-sm font-bold ${step >= 1 ? 'bg-indigo-600 text-white' : 'bg-slate-100 text-slate-500'}`}>1</div>
+            <div className={`flex h-10 w-10 items-center justify-center rounded-full text-sm font-bold ${step >= 1 ? 'bg-brand-600 text-white' : 'bg-slate-100 text-slate-500'}`}>1</div>
             <div>
               <div className="font-bold text-slate-900">基础设置</div>
               <div className="text-xs text-slate-500">目标学年学期</div>
@@ -254,7 +254,7 @@ export default function RecommendationPage() {
           </div>
           <div className="hidden h-1 self-center rounded-full bg-slate-100 md:block" />
           <div className={`flex items-center gap-3 ${step >= 2 ? '' : 'opacity-60'}`}>
-            <div className={`flex h-10 w-10 items-center justify-center rounded-full text-sm font-bold ${step >= 2 ? 'bg-indigo-600 text-white' : 'bg-slate-100 text-slate-500'}`}>2</div>
+            <div className={`flex h-10 w-10 items-center justify-center rounded-full text-sm font-bold ${step >= 2 ? 'bg-brand-600 text-white' : 'bg-slate-100 text-slate-500'}`}>2</div>
             <div>
               <div className="font-bold text-slate-900">维度选择</div>
               <div className="text-xs text-slate-500">规则式或AI推荐</div>
@@ -262,7 +262,7 @@ export default function RecommendationPage() {
           </div>
           <div className="hidden h-1 self-center rounded-full bg-slate-100 md:block" />
           <div className={`flex items-center gap-3 ${step >= 3 ? '' : 'opacity-60'}`}>
-            <div className={`flex h-10 w-10 items-center justify-center rounded-full text-sm font-bold ${step >= 3 ? 'bg-indigo-600 text-white' : 'bg-slate-100 text-slate-500'}`}>3</div>
+            <div className={`flex h-10 w-10 items-center justify-center rounded-full text-sm font-bold ${step >= 3 ? 'bg-brand-600 text-white' : 'bg-slate-100 text-slate-500'}`}>3</div>
             <div>
               <div className="font-bold text-slate-900">分组配置</div>
               <div className="text-xs text-slate-500">确认并保存计划</div>
@@ -274,14 +274,14 @@ export default function RecommendationPage() {
       {step === 1 ? (
         <section className="rounded-[2rem] border border-slate-200 bg-white p-8 shadow-sm shadow-slate-900/5">
           <h2 className="flex items-center text-xl font-bold text-slate-900">
-            <span aria-hidden="true" className="mr-3 flex h-8 w-8 items-center justify-center rounded-full bg-indigo-600 text-sm text-white">1</span>
+            <span aria-hidden="true" className="mr-3 flex h-8 w-8 items-center justify-center rounded-full bg-brand-600 text-sm text-white">1</span>
             选择排课学期
           </h2>
           <div className="mt-6 grid gap-4 md:grid-cols-2">
             <label className="text-sm font-medium text-slate-700">
               目标学年
               <select
-                className="mt-2 w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm outline-none transition focus:border-indigo-300 focus:ring-4 focus:ring-indigo-100"
+                className="mt-2 w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm outline-none transition focus:border-brand-300 focus:ring-4 focus:ring-brand-100"
                 value={year}
                 onChange={(event) => setYear(event.target.value)}
               >
@@ -296,7 +296,7 @@ export default function RecommendationPage() {
             <label className="text-sm font-medium text-slate-700">
               目标学期
               <select
-                className="mt-2 w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm outline-none transition focus:border-indigo-300 focus:ring-4 focus:ring-indigo-100"
+                className="mt-2 w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm outline-none transition focus:border-brand-300 focus:ring-4 focus:ring-brand-100"
                 value={term}
                 onChange={(event) => setTerm(event.target.value as (typeof terms)[number])}
               >
@@ -311,7 +311,7 @@ export default function RecommendationPage() {
           <div className="mt-8 flex justify-end">
             <button
               type="button"
-              className="rounded-full bg-indigo-600 px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-indigo-500"
+              className="rounded-full bg-brand-600 px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-brand-500"
               onClick={() => setStep(2)}
             >
               下一步
@@ -324,7 +324,7 @@ export default function RecommendationPage() {
         <section className="rounded-[2rem] border border-slate-200 bg-white p-8 shadow-sm shadow-slate-900/5">
           <div className="flex flex-wrap items-center justify-between gap-4">
             <h2 className="flex items-center text-xl font-bold text-slate-900">
-              <span aria-hidden="true" className="mr-3 flex h-8 w-8 items-center justify-center rounded-full bg-indigo-600 text-sm text-white">2</span>
+              <span aria-hidden="true" className="mr-3 flex h-8 w-8 items-center justify-center rounded-full bg-brand-600 text-sm text-white">2</span>
               生成推荐课程
             </h2>
             <button
@@ -343,7 +343,7 @@ export default function RecommendationPage() {
                 role="tab"
                 aria-selected={engine === 'rule'}
                 className={`border-b-2 px-1 py-4 text-sm font-medium transition ${
-                  engine === 'rule' ? 'border-indigo-600 text-indigo-600' : 'border-transparent text-slate-500 hover:text-slate-900'
+                  engine === 'rule' ? 'border-brand-600 text-brand-600' : 'border-transparent text-slate-500 hover:text-slate-900'
                 }`}
                 onClick={() => setEngine('rule')}
               >
@@ -354,7 +354,7 @@ export default function RecommendationPage() {
                 role="tab"
                 aria-selected={engine === 'ai'}
                 className={`border-b-2 px-1 py-4 text-sm font-medium transition ${
-                  engine === 'ai' ? 'border-indigo-600 text-indigo-600' : 'border-transparent text-slate-500 hover:text-slate-900'
+                  engine === 'ai' ? 'border-brand-600 text-brand-600' : 'border-transparent text-slate-500 hover:text-slate-900'
                 }`}
                 onClick={() => setEngine('ai')}
               >
@@ -373,7 +373,7 @@ export default function RecommendationPage() {
                       key={rule.key}
                       type="button"
                       className={`rounded-3xl border p-4 text-left transition ${
-                        active ? 'border-indigo-200 bg-indigo-50 text-indigo-700' : 'border-slate-200 bg-slate-50 text-slate-700 hover:border-indigo-200'
+                        active ? 'border-brand-200 bg-brand-50 text-brand-700' : 'border-slate-200 bg-slate-50 text-slate-700 hover:border-brand-200'
                       }`}
                       onClick={() => toggleRule(rule.key)}
                     >
@@ -397,7 +397,7 @@ export default function RecommendationPage() {
               <label className="block text-sm font-medium text-slate-700">
                 AI 需求描述
                 <textarea
-                  className="mt-2 min-h-32 w-full rounded-3xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm leading-6 outline-none transition focus:border-indigo-300 focus:ring-4 focus:ring-indigo-100"
+                  className="mt-2 min-h-32 w-full rounded-3xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm leading-6 outline-none transition focus:border-brand-300 focus:ring-4 focus:ring-brand-100"
                   placeholder="例如：我想找实习，偏全栈方向，希望 workload 不要太重。"
                   value={prompt}
                   onChange={(event) => setPrompt(event.target.value)}
@@ -405,7 +405,7 @@ export default function RecommendationPage() {
               </label>
               <button
                 type="button"
-                className="mt-6 inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-indigo-500 via-violet-500 to-fuchsia-500 px-5 py-3 text-sm font-semibold text-white transition hover:opacity-95"
+                className="mt-6 inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-brand-500 via-violet-500 to-fuchsia-500 px-5 py-3 text-sm font-semibold text-white transition hover:opacity-95"
                 onClick={generateAiRecommendations}
               >
                 <Sparkles size={16} />
@@ -420,7 +420,7 @@ export default function RecommendationPage() {
             <button
               type="button"
               className={`rounded-full px-6 py-2.5 text-sm font-semibold transition ${
-                canGoToStepThree ? 'bg-indigo-600 text-white hover:bg-indigo-500' : 'cursor-not-allowed bg-slate-100 text-slate-400'
+                canGoToStepThree ? 'bg-brand-600 text-white hover:bg-brand-500' : 'cursor-not-allowed bg-slate-100 text-slate-400'
               }`}
               disabled={!canGoToStepThree}
               onClick={() => setStep(3)}
@@ -435,7 +435,7 @@ export default function RecommendationPage() {
         <section className="rounded-[2rem] border border-slate-200 bg-white p-8 shadow-sm shadow-slate-900/5">
           <div className="flex flex-wrap items-center justify-between gap-4">
             <h2 className="flex items-center text-xl font-bold text-slate-900">
-              <span aria-hidden="true" className="mr-3 flex h-8 w-8 items-center justify-center rounded-full bg-indigo-600 text-sm text-white">3</span>
+              <span aria-hidden="true" className="mr-3 flex h-8 w-8 items-center justify-center rounded-full bg-brand-600 text-sm text-white">3</span>
               选课确认与保存
             </h2>
             <button
@@ -447,18 +447,18 @@ export default function RecommendationPage() {
             </button>
           </div>
 
-          <div className="mt-6 rounded-3xl border border-indigo-100 bg-indigo-50/70 p-6">
+          <div className="mt-6 rounded-3xl border border-brand-100 bg-brand-50/70 p-6">
             <div className="flex flex-wrap items-center justify-between gap-4">
               <div>
                 <h3 className="text-lg font-bold text-slate-900">{year} {term} 推荐计划</h3>
                 <p className="mt-1 text-sm text-slate-500">{results.length} 门课待确认，保存后会同步出现在推荐页与个人中心的共享计划数据中。</p>
               </div>
-              <span className="rounded-full border border-indigo-100 bg-white px-3 py-1 text-xs font-semibold text-indigo-600">{engine === 'rule' ? '规则式选课' : 'AI 大模型选课'}</span>
+              <span className="rounded-full border border-brand-100 bg-white px-3 py-1 text-xs font-semibold text-brand-600">{engine === 'rule' ? '规则式选课' : 'AI 大模型选课'}</span>
             </div>
 
             <div className="mt-5 grid gap-4">
               {results.map((item) => (
-                <article key={item.universityCourseId} className="rounded-3xl border border-indigo-100 bg-white p-5">
+                <article key={item.universityCourseId} className="rounded-3xl border border-brand-100 bg-white p-5">
                   <div className="flex flex-wrap items-start justify-between gap-3">
                     <div>
                       <div className="text-lg font-semibold text-slate-900">{item.code}</div>
@@ -484,7 +484,7 @@ export default function RecommendationPage() {
             <button
               type="button"
               className={`rounded-full px-6 py-3 text-sm font-semibold transition ${
-                results.length > 0 ? 'bg-indigo-600 text-white hover:bg-indigo-500' : 'cursor-not-allowed bg-slate-100 text-slate-400'
+                results.length > 0 ? 'bg-brand-600 text-white hover:bg-brand-500' : 'cursor-not-allowed bg-slate-100 text-slate-400'
               }`}
               disabled={results.length === 0}
               onClick={saveCurrentPlan}
@@ -498,7 +498,7 @@ export default function RecommendationPage() {
       <section className="rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm shadow-slate-900/5">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div>
-            <div className="inline-flex items-center gap-2 rounded-full bg-indigo-50 px-3 py-1 text-xs font-semibold text-indigo-600">
+            <div className="inline-flex items-center gap-2 rounded-full bg-brand-50 px-3 py-1 text-xs font-semibold text-brand-600">
               <Sparkles size={14} />
               共享计划数据
             </div>

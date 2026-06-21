@@ -47,7 +47,7 @@ export default function CompletedCourseDrawer({ open, value, onChange, onClose }
           <label className="text-sm font-medium text-slate-700">
             学年
             <select
-              className="mt-2 w-full rounded-2xl border border-indigo-100 bg-indigo-50 px-4 py-3 text-sm outline-none transition focus:border-indigo-300 focus:ring-4 focus:ring-indigo-100"
+              className="mt-2 w-full rounded-2xl border border-brand-100 bg-brand-50 px-4 py-3 text-sm outline-none transition focus:border-brand-300 focus:ring-4 focus:ring-brand-100"
               value={year}
               onChange={(event) => setYear(event.target.value)}
             >
@@ -62,7 +62,7 @@ export default function CompletedCourseDrawer({ open, value, onChange, onClose }
           <label className="text-sm font-medium text-slate-700">
             学期
             <select
-              className="mt-2 w-full rounded-2xl border border-indigo-100 bg-indigo-50 px-4 py-3 text-sm outline-none transition focus:border-indigo-300 focus:ring-4 focus:ring-indigo-100"
+              className="mt-2 w-full rounded-2xl border border-brand-100 bg-brand-50 px-4 py-3 text-sm outline-none transition focus:border-brand-300 focus:ring-4 focus:ring-brand-100"
               value={term}
               onChange={(event) => setTerm(event.target.value as ReviewTerm)}
             >
@@ -81,7 +81,7 @@ export default function CompletedCourseDrawer({ open, value, onChange, onClose }
             <MagnifyingGlass className="pointer-events-none absolute top-1/2 left-4 -translate-y-1/2 text-slate-400" size={18} />
             <input
               type="text"
-              className="w-full rounded-2xl border border-slate-200 bg-white py-3 pr-4 pl-11 text-sm outline-none transition focus:border-indigo-300 focus:ring-4 focus:ring-indigo-100"
+              className="w-full rounded-2xl border border-slate-200 bg-white py-3 pr-4 pl-11 text-sm outline-none transition focus:border-brand-300 focus:ring-4 focus:ring-brand-100"
               placeholder="输入课程代码或名称搜索..."
               value={keyword}
               onChange={(event) => setKeyword(event.target.value)}
@@ -109,7 +109,7 @@ export default function CompletedCourseDrawer({ open, value, onChange, onClose }
                   <div className="font-semibold text-slate-900">{course.code}</div>
                   <div className="text-sm text-slate-500">{course.name}</div>
                 </div>
-                <span className="rounded-full border border-indigo-100 bg-indigo-50 px-3 py-1 text-xs font-semibold text-indigo-600">
+                <span className="rounded-full border border-brand-100 bg-brand-50 px-3 py-1 text-xs font-semibold text-brand-600">
                   添加
                 </span>
               </button>
@@ -138,7 +138,7 @@ export default function CompletedCourseDrawer({ open, value, onChange, onClose }
         <div className="flex justify-end border-t border-slate-100 pt-5">
           <button
             type="button"
-            className="rounded-full bg-indigo-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm shadow-indigo-600/25 transition hover:bg-indigo-500"
+            className="rounded-full bg-brand-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm shadow-brand-600/25 transition hover:bg-brand-500"
             onClick={onClose}
           >
             完成

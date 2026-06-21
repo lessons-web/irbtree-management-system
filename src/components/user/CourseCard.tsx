@@ -1,5 +1,6 @@
 import { ArrowRight, Flame, Star } from 'lucide-react'
 import { Link } from 'react-router'
+import { useProtectedNavigation } from '../../features/auth/useProtectedNavigation'
 import type { ReviewCourseSummary } from '../../features/review/types'
 
 type CourseCardProps = {
@@ -19,9 +20,15 @@ function getTagClassName(tag: string) {
 }
 
 export default function CourseCard({ course }: CourseCardProps) {
+  const protectedNavigate = useProtectedNavigation()
+
   return (
     <Link
       to={`/course/${course.code}`}
+      onClick={(event) => {
+        event.preventDefault()
+        protectedNavigate(`/course/${course.code}`)
+      }}
       className="group flex h-full flex-col justify-between rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-md"
     >
       <div>
@@ -35,7 +42,7 @@ export default function CourseCard({ course }: CourseCardProps) {
           </span>
         </div>
 
-        <h3 className="text-xl font-bold text-slate-900 transition group-hover:text-indigo-600">{course.code}</h3>
+        <h3 className="text-xl font-bold text-slate-900 transition group-hover:text-brand-600">{course.code}</h3>
         <p className="mt-1 line-clamp-2 min-h-10 text-sm leading-6 text-slate-500">{course.name}</p>
 
         <div className="mt-4 flex flex-wrap gap-2">
@@ -55,7 +62,7 @@ export default function CourseCard({ course }: CourseCardProps) {
           <Flame size={15} className="text-orange-500" />
           {course.reviewCount} 条评价
         </span>
-        <span className="inline-flex items-center gap-1 font-medium text-indigo-600 transition group-hover:text-indigo-500">
+        <span className="inline-flex items-center gap-1 font-medium text-brand-600 transition group-hover:text-brand-500">
           查看详情
           <ArrowRight size={14} />
         </span>

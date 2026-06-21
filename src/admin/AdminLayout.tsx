@@ -178,7 +178,7 @@ function AdminLayoutContent() {
                 aria-label="管理员菜单"
                 aria-expanded={menuOpen}
               >
-                <span className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-indigo-600 text-sm font-semibold text-white">
+                <span className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-brand-600 text-sm font-semibold text-white">
                   {presentation.avatarText}
                 </span>
                 <div className="hidden text-left sm:block">

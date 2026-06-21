@@ -35,7 +35,7 @@ type RatingDashboardProps = {
 export default function RatingDashboard({ course, detail, className = '' }: RatingDashboardProps) {
   const ratingBars = [
     { label: '课程难度 (Difficulty)', item: detail.ratings.difficulty, colorClass: 'bg-rose-500' },
-    { label: '作业多少 (Homework)', item: detail.ratings.homework, colorClass: 'bg-indigo-500' },
+    { label: '作业多少 (Homework)', item: detail.ratings.homework, colorClass: 'bg-brand-500' },
     { label: '给分好坏 (Grading)', item: detail.ratings.grading, colorClass: 'bg-emerald-500' },
     { label: '收获大小 (Harvest)', item: detail.ratings.harvest, colorClass: 'bg-amber-500' },
   ] as const

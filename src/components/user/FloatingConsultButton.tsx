@@ -66,7 +66,7 @@ export default function FloatingConsultButton() {
               </div>
             </div>
 
-            <div className="rounded-[22px] border border-dashed border-indigo-200 bg-indigo-50 px-4 py-3 text-xs leading-6 text-indigo-700">
+            <div className="rounded-[22px] border border-dashed border-brand-200 bg-brand-50 px-4 py-3 text-xs leading-6 text-brand-700">
               工作日 10:00-20:00 回复更快；如遇选课高峰，建议先添加微信备注学校与专业方向。
             </div>
           </div>

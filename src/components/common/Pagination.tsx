@@ -43,7 +43,7 @@ export default function Pagination({
     <nav className="flex flex-wrap items-center gap-2" aria-label="分页">
       <button
         type="button"
-        className="rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm font-medium text-slate-700 transition hover:border-indigo-200 hover:text-indigo-600 disabled:cursor-not-allowed disabled:opacity-50"
+        className="rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm font-medium text-slate-700 transition hover:border-brand-200 hover:text-brand-600 disabled:cursor-not-allowed disabled:opacity-50"
         onClick={() => onPageChange(currentPage - 1)}
         disabled={currentPage <= 1}
         aria-label="上一页"
@@ -67,7 +67,7 @@ export default function Pagination({
 
       <button
         type="button"
-        className="rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm font-medium text-slate-700 transition hover:border-indigo-200 hover:text-indigo-600 disabled:cursor-not-allowed disabled:opacity-50"
+        className="rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm font-medium text-slate-700 transition hover:border-brand-200 hover:text-brand-600 disabled:cursor-not-allowed disabled:opacity-50"
         onClick={() => onPageChange(currentPage + 1)}
         disabled={currentPage >= totalPages}
         aria-label="下一页"
@@ -93,7 +93,7 @@ function PageButton({ page, currentPage, onPageChange }: PageButtonProps) {
       className={`min-w-10 rounded-xl px-3 py-2 text-sm font-medium transition ${
         active
           ? 'bg-slate-900 text-white shadow-sm'
-          : 'border border-slate-200 bg-white text-slate-700 hover:border-indigo-200 hover:text-indigo-600'
+          : 'border border-slate-200 bg-white text-slate-700 hover:border-brand-200 hover:text-brand-600'
       }`}
       onClick={() => onPageChange(page)}
       aria-label={`第 ${page} 页`}

@@ -25,11 +25,52 @@ describe('router', () => {
     expect(screen.getAllByRole('button', { name: /课程咨询|报名咨询/ })).toHaveLength(1)
   })
 
-  it('keeps the floating consult button on non-home routes', async () => {
+  it('keeps users on home when unauthenticated header navigation is clicked and resumes after login', async () => {
     const routes = (router as unknown as { routes: RouteObject[] }).routes
-    const memoryRouter = createMemoryRouter(routes, { initialEntries: ['/review'] })
+    const memoryRouter = createMemoryRouter(routes, { initialEntries: ['/'] })
 
     render(<RouterProvider router={memoryRouter} />)
+    await screen.findByRole('heading', { name: /拒绝挂科/ })
+
+    fireEvent.click(screen.getByRole('link', { name: '课程列表' }))
+
+    expect(screen.getByRole('dialog', { name: '请先登录' })).toBeInTheDocument()
+    expect(memoryRouter.state.location.pathname).toBe('/')
+
+    fireEvent.click(screen.getByRole('button', { name: '立即登录' }))
+
+    expect(await screen.findByLabelText('搜索课程')).toBeInTheDocument()
+    expect(memoryRouter.state.location.pathname).toBe('/courses')
+  })
+
+  it('keeps users on home when unauthenticated featured course card is clicked and resumes after login', async () => {
+    const routes = (router as unknown as { routes: RouteObject[] }).routes
+    const memoryRouter = createMemoryRouter(routes, { initialEntries: ['/'] })
+
+    render(<RouterProvider router={memoryRouter} />)
+    await screen.findByRole('heading', { name: /拒绝挂科/ })
+
+    fireEvent.click(screen.getByRole('link', { name: /COMP9021/i }))
+
+    expect(screen.getByRole('dialog', { name: '请先登录' })).toBeInTheDocument()
+    expect(memoryRouter.state.location.pathname).toBe('/')
+
+    fireEvent.click(screen.getByRole('button', { name: '立即登录' }))
+
+    expect(await screen.findByRole('heading', { name: /COMP9021 Principles of Programming/i })).toBeInTheDocument()
+  })
+
+  it('keeps the floating consult button on non-home routes', async () => {
+    const routes = (router as unknown as { routes: RouteObject[] }).routes
+    const memoryRouter = createMemoryRouter(routes, { initialEntries: ['/auth'] })
+
+    render(<RouterProvider router={memoryRouter} />)
+
+    fireEvent.click(await screen.findByRole('button', { name: '进入演示系统' }))
+    await act(async () => {
+      await memoryRouter.navigate('/review')
+    })
+
     expect(await screen.findByLabelText('搜索课程')).toBeInTheDocument()
     expect(screen.getByRole('button', { name: /报名咨询/ })).toBeInTheDocument()
   })
@@ -127,11 +168,32 @@ describe('router', () => {
     expect(memoryRouter.state.location.hash).toBe('#result')
   })
 
-  it('preserves query and hash for the legacy review list alias', async () => {
+  it('redirects unauthenticated direct visits for all non-home user routes to auth', async () => {
     const routes = (router as unknown as { routes: RouteObject[] }).routes
-    const memoryRouter = createMemoryRouter(routes, { initialEntries: ['/review?query=COMP9311&page=2#filters'] })
+    const memoryRouter = createMemoryRouter(routes, { initialEntries: ['/courses?query=COMP9311#filters'] })
 
     render(<RouterProvider router={memoryRouter} />)
+
+    expect(await screen.findByRole('heading', { name: /进入 IRBTree 演示系统/ })).toBeInTheDocument()
+    expect(memoryRouter.state.location.pathname).toBe('/auth')
+    expect(memoryRouter.state.location.state?.from).toEqual({
+      pathname: '/courses',
+      search: '?query=COMP9311',
+      hash: '#filters',
+    })
+  })
+
+  it('preserves query and hash for the legacy review list alias', async () => {
+    const routes = (router as unknown as { routes: RouteObject[] }).routes
+    const memoryRouter = createMemoryRouter(routes, { initialEntries: ['/auth'] })
+
+    render(<RouterProvider router={memoryRouter} />)
+
+    fireEvent.click(await screen.findByRole('button', { name: '进入演示系统' }))
+
+    await act(async () => {
+      await memoryRouter.navigate('/review?query=COMP9311&page=2#filters')
+    })
 
     expect(await screen.findByLabelText('搜索课程')).toBeInTheDocument()
     expect(memoryRouter.state.location.pathname).toBe('/courses')

@@ -139,7 +139,7 @@ export default function MessagesAdminPage() {
             aria-label="标题"
             value={draft.title}
             onChange={(event) => setDraft((current) => ({ ...current, title: event.target.value }))}
-            className="h-11 w-full rounded-xl border border-slate-200 bg-white px-4 text-sm text-slate-700 outline-none transition focus:border-indigo-400"
+            className="h-11 w-full rounded-xl border border-slate-200 bg-white px-4 text-sm text-slate-700 outline-none transition focus:border-brand-400"
           />
         </label>
 
@@ -149,7 +149,7 @@ export default function MessagesAdminPage() {
             aria-label="发送对象"
             value={draft.audience}
             onChange={(event) => setDraft((current) => ({ ...current, audience: event.target.value }))}
-            className="h-11 w-full rounded-xl border border-slate-200 bg-white px-4 text-sm text-slate-700 outline-none transition focus:border-indigo-400"
+            className="h-11 w-full rounded-xl border border-slate-200 bg-white px-4 text-sm text-slate-700 outline-none transition focus:border-brand-400"
           >
             {messageAudienceOptions
               .filter((option) => option.value !== 'all')
@@ -168,7 +168,7 @@ export default function MessagesAdminPage() {
             value={draft.publishAt}
             onChange={(event) => setDraft((current) => ({ ...current, publishAt: event.target.value }))}
             placeholder="例如：2026-06-20 18:00"
-            className="h-11 w-full rounded-xl border border-slate-200 bg-white px-4 text-sm text-slate-700 outline-none transition focus:border-indigo-400"
+            className="h-11 w-full rounded-xl border border-slate-200 bg-white px-4 text-sm text-slate-700 outline-none transition focus:border-brand-400"
           />
         </label>
 
@@ -179,7 +179,7 @@ export default function MessagesAdminPage() {
             value={draft.content}
             onChange={(event) => setDraft((current) => ({ ...current, content: event.target.value }))}
             rows={5}
-            className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-700 outline-none transition focus:border-indigo-400"
+            className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-700 outline-none transition focus:border-brand-400"
           />
         </label>
 
@@ -194,7 +194,7 @@ export default function MessagesAdminPage() {
           <button
             type="button"
             onClick={handleCreateMessage}
-            className="rounded-xl bg-indigo-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-indigo-500 disabled:cursor-not-allowed disabled:bg-indigo-300"
+            className="rounded-xl bg-brand-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-brand-500 disabled:cursor-not-allowed disabled:bg-brand-300"
             disabled={!draft.title.trim()}
           >
             保存消息

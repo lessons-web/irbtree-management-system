@@ -227,7 +227,7 @@ export default function TagsAdminPage() {
             <button
               type="button"
               onClick={handleSaveTag}
-              className="rounded-xl bg-indigo-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-indigo-500 disabled:cursor-not-allowed disabled:bg-indigo-300"
+              className="rounded-xl bg-brand-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-brand-500 disabled:cursor-not-allowed disabled:bg-brand-300"
               disabled={saveDisabled}
             >
               保存标签

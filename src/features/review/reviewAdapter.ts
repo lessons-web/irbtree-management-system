@@ -145,7 +145,7 @@ function buildReviewCourseSummary(detail: ReviewCourseDetail): ReviewCourseSumma
     rating: aggregate.rating,
     reviewCount: aggregate.reviewCount,
     tags: course.tags,
-    color: COURSE_COLOR_BY_ID[detail.universityCourseId] ?? 'bg-indigo-600',
+    color: COURSE_COLOR_BY_ID[detail.universityCourseId] ?? 'bg-brand-600',
     likes: socialMeta.likes,
     favorites: socialMeta.favorites,
     isLiked: false,

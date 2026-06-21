@@ -15,7 +15,7 @@ export default function PopularCourses() {
           <Flame className="mr-2 h-6 w-6 text-orange-500" />
           热门课程
         </h2>
-        <Link to="/courses" className="flex items-center text-sm font-medium text-indigo-700 hover:text-indigo-600">
+        <Link to="/courses" className="flex items-center text-sm font-medium text-brand-700 hover:text-brand-600">
           查看全部 <ArrowRight className="ml-1 h-4 w-4" />
         </Link>
       </div>
@@ -30,11 +30,11 @@ export default function PopularCourses() {
             >
               <div className="flex items-start justify-between gap-4">
                 <div>
-                  <div className="text-sm font-semibold text-indigo-700">{c.code}</div>
+                  <div className="text-sm font-semibold text-brand-700">{c.code}</div>
                   <div className="mt-1 text-lg font-bold text-slate-900">{c.name}</div>
                 </div>
-                <div className="flex items-center gap-1 rounded-full border border-indigo-100 bg-indigo-50 px-2.5 py-1 text-sm font-semibold text-indigo-700">
-                  <Star className="h-4 w-4 fill-indigo-600 text-indigo-600" />
+                <div className="flex items-center gap-1 rounded-full border border-brand-100 bg-brand-50 px-2.5 py-1 text-sm font-semibold text-brand-700">
+                  <Star className="h-4 w-4 fill-brand-600 text-brand-600" />
                   {c.rating ?? '-'}
                 </div>
               </div>

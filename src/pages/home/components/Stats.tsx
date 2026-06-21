@@ -10,10 +10,10 @@ export default function Stats() {
       {STATS.map((s) => (
         <div
           key={s.label}
-          className="flex flex-col items-center justify-center rounded-2xl border border-slate-100 bg-slate-50 p-5 shadow-sm transition hover:scale-110 hover:border-indigo-600 hover:bg-indigo-100"
+          className="flex flex-col items-center justify-center rounded-2xl border border-slate-100 bg-slate-50 p-5 shadow-sm transition hover:scale-110 hover:border-brand-600 hover:bg-brand-100"
         >
           <dt className="truncate text-sm font-medium text-slate-500">{s.label}</dt>
-          <dd className="mt-1 text-3xl font-semibold text-indigo-600">{s.value}</dd>
+          <dd className="mt-1 text-3xl font-semibold text-brand-600">{s.value}</dd>
         </div>
       ))}
     </dl>

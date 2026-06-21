@@ -12,7 +12,7 @@ const dimensionConfigs: Array<{
   barClassName: string
 }> = [
   { key: 'difficulty', label: '课程难度', barClassName: 'bg-rose-400' },
-  { key: 'homework', label: '作业多少', barClassName: 'bg-indigo-400' },
+  { key: 'homework', label: '作业多少', barClassName: 'bg-brand-400' },
   { key: 'grading', label: '给分好坏', barClassName: 'bg-emerald-400' },
   { key: 'harvest', label: '收获大小', barClassName: 'bg-amber-400' },
 ]
