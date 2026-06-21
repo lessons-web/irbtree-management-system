@@ -21,18 +21,23 @@ import { AdminRuntimeProvider, useAdminRuntime } from './context/AdminRuntimeCon
 import { adminPageTitles, adminPrimaryNav, adminSystemNav } from './config/navigation'
 import { getUserPresentation, useAuth } from '../features/auth/state'
 
-const navIcons: Record<string, typeof BookOpen> = {
-  '课程管理': BookOpen,
-  '评价管理': ChatText,
-  '院校管理': Buildings,
-  '教师管理': ChalkboardTeacher,
-  '学期管理': Calendar,
-  '标签管理': Tag,
-  '用户管理': Users,
-  '系统设置': Gear,
-  '消息管理': Bell,
-  '系统日志': Scroll,
+const navIconsByRoute: Record<string, typeof BookOpen> = {
+  '/admin/courses': BookOpen,
+  '/admin/reviews': ChatText,
+  '/admin/universities': Buildings,
+  '/admin/teachers': ChalkboardTeacher,
+  '/admin/semesters': Calendar,
+  '/admin/tags': Tag,
+  '/admin/users': Users,
+  '/admin/messages': Bell,
+  '/admin/logs': Scroll,
 } as const
+
+const systemNavRoutes = adminSystemNav.map((item) => item.to)
+
+function matchesAdminRoute(pathname: string, to: string) {
+  return pathname === to || pathname.startsWith(`${to}/`)
+}
 
 export default function AdminLayout() {
   return (
@@ -47,8 +52,9 @@ function AdminLayoutContent() {
   const { user, logout } = useAuth()
   const { notifications } = useAdminRuntime()
   const presentation = getUserPresentation(user)
+  const isSystemSectionActive = systemNavRoutes.some((route) => matchesAdminRoute(pathname, route))
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false)
-  const [systemOpen, setSystemOpen] = useState(pathname.startsWith('/admin/messages') || pathname.startsWith('/admin/logs'))
+  const [systemOpen, setSystemOpen] = useState(isSystemSectionActive)
   const [notificationOpen, setNotificationOpen] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
   const menuRef = useRef<HTMLDivElement | null>(null)
@@ -67,25 +73,25 @@ function AdminLayoutContent() {
   }, [menuOpen])
 
   useEffect(() => {
-    if (pathname.startsWith('/admin/messages') || pathname.startsWith('/admin/logs')) {
+    if (isSystemSectionActive) {
       setSystemOpen(true)
     }
-  }, [pathname])
+  }, [isSystemSectionActive])
 
   const pageTitle = useMemo(() => adminPageTitles.get(pathname) ?? '后台管理', [pathname])
 
   return (
     <div className="flex h-screen overflow-hidden bg-slate-50 text-slate-800">
       <aside
-        className={`hidden shrink-0 border-r border-slate-200 bg-white shadow-sm shadow-slate-200/60 transition-all duration-300 lg:flex lg:flex-col ${
+        className={`hidden shrink-0 border-r border-slate-200/80 bg-slate-50/95 transition-all duration-300 lg:flex lg:flex-col ${
           sidebarCollapsed ? 'w-24' : 'w-72'
         }`}
       >
-        <div className="flex items-center gap-3 px-5 py-5">
-          <img src="/favicon.svg" alt="" aria-hidden="true" className="h-10 w-10 rounded-xl" />
+        <div className="flex items-center gap-3 border-b border-slate-200/70 px-5 py-5">
+          <img src="/favicon.svg" alt="" aria-hidden="true" className="h-10 w-10 rounded-2xl bg-white p-1.5 ring-1 ring-slate-200/80" />
           {!sidebarCollapsed ? (
             <div className="min-w-0">
-              <p className="truncate text-lg font-bold text-slate-900">IRBTree Admin</p>
+              <p className="truncate text-base font-semibold text-slate-900">IRBTree Admin</p>
               <p className="text-xs text-slate-500">课程管理与治理后台</p>
             </div>
           ) : null}
@@ -100,12 +106,20 @@ function AdminLayoutContent() {
             <button
               type="button"
               onClick={() => setSystemOpen((value) => !value)}
-              className={`flex w-full items-center rounded-2xl px-4 py-3 transition hover:bg-slate-100 ${
-                pathname.startsWith('/admin/messages') || pathname.startsWith('/admin/logs') ? 'bg-slate-100 text-slate-900' : ''
+              className={`relative flex w-full items-center rounded-2xl px-4 py-3 transition ${
+                isSystemSectionActive
+                  ? 'bg-violet-50/70 text-violet-700'
+                  : 'text-slate-600 hover:bg-white hover:text-slate-900'
               }`}
               aria-label="系统设置"
             >
-              <Gear size={20} className="shrink-0" />
+              <span
+                aria-hidden="true"
+                className={`absolute top-3 bottom-3 left-2 w-0.5 rounded-full transition ${
+                  isSystemSectionActive ? 'bg-violet-300' : 'bg-transparent'
+                }`}
+              />
+              <Gear size={20} className={`shrink-0 ${isSystemSectionActive ? 'text-violet-600' : ''}`} />
               {!sidebarCollapsed ? (
                 <>
                   <span className="ml-3 flex-1 text-left">系统设置</span>
@@ -114,16 +128,16 @@ function AdminLayoutContent() {
               ) : null}
             </button>
             {systemOpen && !sidebarCollapsed ? (
-              <div className="mt-1 space-y-1 rounded-2xl bg-slate-50 p-2">
+              <div className="mt-1 space-y-1 rounded-2xl border border-violet-100/70 bg-white/80 p-2">
                 {adminSystemNav.map((item) => (
-                  <SidebarLink key={item.to} to={item.to} label={item.label} collapsed={false} inset />
+                  <SidebarLink key={item.to} to={item.to} label={item.label} collapsed={false} inset variant="subtle" />
                 ))}
               </div>
             ) : null}
           </div>
         </nav>
 
-        <div className="flex items-center justify-between border-t border-slate-100 px-4 py-4">
+        <div className="flex items-center justify-between border-t border-slate-200/70 px-4 py-4">
           {!sidebarCollapsed ? (
             <div className="space-y-0.5">
               <p className="text-xs font-semibold text-slate-500">v1.0.2</p>
@@ -133,7 +147,7 @@ function AdminLayoutContent() {
           <button
             type="button"
             onClick={() => setSidebarCollapsed((value) => !value)}
-            className="rounded-xl p-2 text-slate-400 transition hover:bg-slate-100 hover:text-slate-700"
+            className="rounded-xl border border-transparent bg-white/80 p-2 text-slate-400 transition hover:border-slate-200 hover:text-slate-700"
             aria-label={sidebarCollapsed ? '展开侧栏' : '折叠侧栏'}
           >
             <CaretLeft size={18} className={sidebarCollapsed ? 'rotate-180' : ''} />
@@ -142,29 +156,25 @@ function AdminLayoutContent() {
       </aside>
 
       <div className="flex min-w-0 flex-1 flex-col">
-        <header className="flex h-16 items-center justify-between border-b border-slate-200 bg-white px-4 shadow-sm shadow-slate-100 sm:px-6 lg:px-8">
-          <div className="flex items-center gap-3">
-            <h1 className="text-xl font-bold text-slate-900">{pageTitle}</h1>
-          </div>
+        <header className="flex h-16 items-center justify-between border-b border-slate-200/70 bg-slate-50/80 px-4 sm:px-6 lg:px-8">
+          <h1 className="text-lg font-semibold text-slate-900">{pageTitle}</h1>
 
           <div className="flex items-center gap-4">
             <button
               type="button"
               onClick={() => setNotificationOpen(true)}
-              className="relative rounded-full p-2 text-slate-400 transition hover:bg-slate-100 hover:text-slate-700"
+              className="relative rounded-xl border border-transparent bg-white/80 p-2 text-slate-400 transition hover:border-slate-200 hover:bg-white hover:text-slate-700"
               aria-label="通知"
             >
               <Bell size={20} />
-              <span className="absolute top-2 right-2 h-2.5 w-2.5 rounded-full bg-rose-500 ring-2 ring-white" />
+              <span className="absolute top-2 right-2 h-2.5 w-2.5 rounded-full bg-rose-500 ring-2 ring-slate-50/90" />
             </button>
-
-            <div className="h-8 w-px bg-slate-200" />
 
             <div ref={menuRef} className="relative">
               <button
                 type="button"
                 onClick={() => setMenuOpen((value) => !value)}
-                className="flex items-center gap-3 rounded-full px-2 py-1 transition hover:bg-slate-50"
+                className="flex items-center gap-3 rounded-full border border-transparent bg-white/80 px-2 py-1 transition hover:border-slate-200 hover:bg-white"
                 aria-label="管理员菜单"
                 aria-expanded={menuOpen}
               >
@@ -229,20 +239,48 @@ function AdminLayoutContent() {
   )
 }
 
-function SidebarLink({ to, label, collapsed, inset = false }: { to: string; label: string; collapsed: boolean; inset?: boolean }) {
-  const Icon = navIcons[label]
+function SidebarLink({
+  to,
+  label,
+  collapsed,
+  inset = false,
+  variant = 'primary',
+}: {
+  to: string
+  label: string
+  collapsed: boolean
+  inset?: boolean
+  variant?: 'primary' | 'subtle'
+}) {
+  const Icon = navIconsByRoute[to]
 
   return (
     <NavLink
       to={to}
       className={({ isActive }) =>
-        `flex items-center rounded-2xl px-4 py-3 transition ${
+        `relative flex items-center rounded-2xl px-4 py-3 transition ${
           inset ? 'pl-8' : ''
-        } ${isActive ? 'bg-slate-900 text-white shadow-sm' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'}`
+        } ${
+          isActive
+            ? variant === 'subtle'
+              ? 'bg-violet-50/70 text-violet-700'
+              : 'bg-violet-50 text-violet-700 shadow-sm shadow-violet-100/70'
+            : 'text-slate-600 hover:bg-white hover:text-slate-900'
+        }`
       }
     >
-      <Icon size={20} className="shrink-0" />
-      {!collapsed ? <span className="ml-3">{label}</span> : null}
+      {({ isActive }) => (
+        <>
+          <span
+            aria-hidden="true"
+            className={`absolute top-3 bottom-3 left-2 w-0.5 rounded-full transition ${
+              isActive ? (variant === 'subtle' ? 'bg-violet-300' : 'bg-violet-500') : 'bg-transparent'
+            }`}
+          />
+          <Icon size={20} className={`shrink-0 ${isActive ? 'text-violet-600' : ''}`} />
+          {!collapsed ? <span className="ml-3">{label}</span> : null}
+        </>
+      )}
     </NavLink>
   )
 }

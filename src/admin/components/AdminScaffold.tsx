@@ -6,8 +6,8 @@ import Pagination from '../../components/common/Pagination'
 import type { AdminColumn, AdminStatusTone } from '../types/admin'
 
 type PageFrameProps = {
-  title: string
-  description: string
+  title?: ReactNode
+  description?: ReactNode
   query: string
   onQueryChange: (value: string) => void
   searchPlaceholder: string
@@ -40,8 +40,6 @@ type AdminConfirmProps = {
 }
 
 export function AdminPageFrame({
-  title,
-  description,
   query,
   onQueryChange,
   searchPlaceholder,
@@ -52,11 +50,6 @@ export function AdminPageFrame({
 }: PageFrameProps) {
   return (
     <section className="space-y-6">
-      <div className="flex flex-col gap-2">
-        <h2 className="text-[28px] font-bold tracking-tight text-slate-900">{title}</h2>
-        <p className="text-sm text-slate-500">{description}</p>
-      </div>
-
       <div className="flex flex-col gap-4 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm shadow-slate-200/50 lg:flex-row lg:items-center lg:justify-between">
         <div className="flex flex-1 flex-col gap-3 sm:flex-row">
           <label className="relative min-w-0 flex-1">
@@ -274,7 +267,7 @@ export function DetailGroup({ label, value }: { label: string; value: string }) 
 
 export function clampPage(page: number, totalItems: number, pageSize: number) {
   const totalPages = Math.max(1, Math.ceil(totalItems / pageSize))
-  return Math.min(page, totalPages)
+  return Math.max(1, Math.min(page, totalPages))
 }
 
 export function sliceRows<T>(rows: T[], page: number, pageSize: number) {
