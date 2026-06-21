@@ -1,4 +1,4 @@
-import { act, fireEvent, render, screen, within } from '@testing-library/react'
+import { act, fireEvent, render, screen, waitFor, within } from '@testing-library/react'
 import { Outlet, RouterProvider, createMemoryRouter } from 'react-router'
 import { describe, expect, it } from 'vitest'
 import AdminLayout from '../AdminLayout'
@@ -124,6 +124,30 @@ describe('Admin page behaviors', () => {
     expect(within(courseTable).getByRole('columnheader', { name: '课程名称' })).toBeInTheDocument()
   })
 
+  it('shows the course page title only in the header without duplicate page copy in the content area', () => {
+    renderAdminAt('/admin/courses')
+
+    expect(screen.getAllByRole('heading', { name: '课程管理' })).toHaveLength(1)
+    expect(screen.getByRole('heading', { level: 1, name: '课程管理' })).toBeInTheDocument()
+    expect(screen.queryByRole('heading', { level: 2, name: '课程管理' })).not.toBeInTheDocument()
+    expect(screen.queryByText('维护课程信息、教师与状态，作为后台默认首页展示。')).not.toBeInTheDocument()
+  })
+
+  it('shows 18 courses with 11 total table rows on the first page and 9 total rows after switching to the second page', async () => {
+    renderAdminAt('/admin/courses')
+
+    const firstPageTable = await screen.findByRole('table')
+    expect(within(firstPageTable).getAllByRole('row')).toHaveLength(11)
+    expect(screen.getByRole('button', { name: '第 2 页' })).toBeInTheDocument()
+    expect(screen.getByText('共 18 条数据')).toBeInTheDocument()
+
+    fireEvent.click(screen.getByRole('button', { name: '第 2 页' }))
+
+    await waitFor(() => {
+      expect(within(screen.getByRole('table')).getAllByRole('row')).toHaveLength(9)
+    })
+  })
+
   it('uses choice-based fields in the course drawer', async () => {
     renderAdminAt('/admin/courses')
 
@@ -199,6 +223,32 @@ describe('Admin page behaviors', () => {
 
     await navigateTo('/admin/logs')
     expect(await screen.findByText('下线课程《COMP9021 Principles of Programming》')).toBeInTheDocument()
+  })
+
+  it('does not append duplicate notifications or logs when offlining an already disabled course', async () => {
+    const { navigateTo } = renderAdminAt('/admin/courses')
+
+    const courseTable = await screen.findByRole('table')
+    const targetRow = within(courseTable).getByText('COMP9021').closest('tr') as HTMLElement
+
+    fireEvent.click(within(targetRow).getByRole('button', { name: '下线' }))
+    fireEvent.click(await screen.findByRole('button', { name: '确认下线' }))
+
+    const disabledTable = await screen.findByRole('table')
+    const disabledRow = within(disabledTable).getByText('COMP9021').closest('tr') as HTMLElement
+    const offlineButton = within(disabledRow).getByRole('button', { name: '下线' })
+
+    expect(within(disabledRow).getByText('已停用')).toBeInTheDocument()
+    expect(offlineButton).toBeDisabled()
+
+    fireEvent.click(offlineButton)
+    expect(screen.queryByRole('button', { name: '确认下线' })).not.toBeInTheDocument()
+
+    fireEvent.click(screen.getByRole('button', { name: '通知' }))
+    expect(await screen.findAllByText('已下线课程：COMP9021 Principles of Programming')).toHaveLength(1)
+
+    await navigateTo('/admin/logs')
+    expect(screen.getAllByText('下线课程《COMP9021 Principles of Programming》')).toHaveLength(1)
   })
 
   it('updates the moderation badge after approving a review', async () => {

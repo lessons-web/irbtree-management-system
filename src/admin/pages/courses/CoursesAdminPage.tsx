@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react'
-import { courseRows, statusOptions, teacherRows, universityOptions } from '../../data'
+import { buildCourseSearchText, courseRows, statusOptions, teacherRows, universityOptions } from '../../data'
 import {
   AdminActionButtons,
   AdminConfirmModal,
@@ -22,7 +22,7 @@ import { useAdminPageFilters } from '../../hooks/useAdminPageFilters'
 import { getUserPresentation, useAuth } from '../../../features/auth/state'
 import type { AdminColumn, CourseAdminRow, CourseDraft } from '../../types/admin'
 
-const pageSize = 6
+const pageSize = 10
 const baseCourseDraft: CourseDraft = {
   code: '',
   name: '',
@@ -78,7 +78,12 @@ export default function CoursesAdminPage() {
       className: 'text-center',
       cellClassName: 'text-center',
       render: (row) => (
-        <AdminActionButtons onEdit={() => openEditDrawer(row)} onDelete={() => setConfirmingRow(row)} deleteLabel="下线" />
+        <AdminActionButtons
+          onEdit={() => openEditDrawer(row)}
+          onDelete={() => setConfirmingRow(row)}
+          deleteLabel="下线"
+          deleteDisabled={row.status === '已停用'}
+        />
       ),
     },
   ]
@@ -123,19 +128,6 @@ export default function CoursesAdminPage() {
       teacher: '',
       tutor: '',
     }
-  }
-
-  function buildCourseSearchText(nextDraft: CourseDraft) {
-    return [
-      nextDraft.code,
-      nextDraft.name,
-      nextDraft.university,
-      nextDraft.teacher,
-      nextDraft.tutor,
-      nextDraft.summary,
-    ]
-      .join(' ')
-      .trim()
   }
 
   function resetDrawer() {
@@ -221,6 +213,12 @@ export default function CoursesAdminPage() {
 
   function handleConfirmOffline() {
     if (!confirmingRow) return
+    const targetRow = rows.find((row) => row.id === confirmingRow.id)
+
+    if (!targetRow || targetRow.status === '已停用') {
+      setConfirmingRow(null)
+      return
+    }
 
     updateEntity(confirmingRow.id, (current) => ({
       ...current,
