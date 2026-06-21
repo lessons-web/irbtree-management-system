@@ -1,10 +1,14 @@
-import { createBrowserRouter, Outlet } from 'react-router'
+import { createBrowserRouter, Navigate, Outlet } from 'react-router'
 import AdminLayout from '../admin/AdminLayout'
-import DashboardPage from '../admin/pages/DashboardPage'
-import ContentPlaceholderPage from '../admin/pages/content/ContentPlaceholderPage'
-import ReviewsPlaceholderPage from '../admin/pages/reviews/ReviewsPlaceholderPage'
-import StudentsPlaceholderPage from '../admin/pages/students/StudentsPlaceholderPage'
-import SystemPlaceholderPage from '../admin/pages/system/SystemPlaceholderPage'
+import CoursesAdminPage from '../admin/pages/courses/CoursesAdminPage'
+import LogsAdminPage from '../admin/pages/logs/LogsAdminPage'
+import MessagesAdminPage from '../admin/pages/messages/MessagesAdminPage'
+import ReviewsAdminPage from '../admin/pages/reviews/ReviewsAdminPage'
+import SemestersAdminPage from '../admin/pages/semesters/SemestersAdminPage'
+import TagsAdminPage from '../admin/pages/tags/TagsAdminPage'
+import TeachersAdminPage from '../admin/pages/teachers/TeachersAdminPage'
+import UniversitiesAdminPage from '../admin/pages/universities/UniversitiesAdminPage'
+import UsersAdminPage from '../admin/pages/users/UsersAdminPage'
 import CourseDetailAlias from './CourseDetailAlias'
 import PathAlias from './PathAlias'
 import { AuthProvider } from '../features/auth/AuthContext'
@@ -63,11 +67,16 @@ export const router = createBrowserRouter([
           {
             element: <AdminLayout />,
             children: [
-              { index: true, Component: DashboardPage },
-              { path: 'reviews', Component: ReviewsPlaceholderPage },
-              { path: 'students', Component: StudentsPlaceholderPage },
-              { path: 'content', Component: ContentPlaceholderPage },
-              { path: 'system', Component: SystemPlaceholderPage },
+              { index: true, element: <Navigate to="/admin/courses" replace /> },
+              { path: 'courses', Component: CoursesAdminPage },
+              { path: 'reviews', Component: ReviewsAdminPage },
+              { path: 'universities', Component: UniversitiesAdminPage },
+              { path: 'teachers', Component: TeachersAdminPage },
+              { path: 'semesters', Component: SemestersAdminPage },
+              { path: 'tags', Component: TagsAdminPage },
+              { path: 'users', Component: UsersAdminPage },
+              { path: 'messages', Component: MessagesAdminPage },
+              { path: 'logs', Component: LogsAdminPage },
             ],
           },
         ],

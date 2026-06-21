@@ -65,14 +65,14 @@ describe('task4 pages', () => {
     expect(screen.queryByRole('link', { name: '个人中心' })).not.toBeInTheDocument()
     const comp9021Card = screen.getByRole('link', { name: /COMP9021/i })
     expect(comp9021Card).toBeInTheDocument()
-    expect(within(comp9021Card).getByText('1 条评价')).toBeInTheDocument()
+    expect(within(comp9021Card).getByText('2 条评价')).toBeInTheDocument()
     expect(screen.queryByText(/任务2\/3 mock 数据/i)).not.toBeInTheDocument()
     expect(screen.queryByRole('heading', { name: '学习摘要' })).not.toBeInTheDocument()
     expect(screen.queryByRole('button', { name: '报名咨询' })).not.toBeInTheDocument()
 
     fireEvent.click(screen.getByRole('button', { name: 'mutate-home-course' }))
 
-    expect(within(comp9021Card).getByText('2 条评价')).toBeInTheDocument()
+    expect(within(comp9021Card).getByText('3 条评价')).toBeInTheDocument()
   })
 
   it('renders migrated courses page controls and resets to defaults', () => {

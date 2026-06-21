@@ -30,7 +30,7 @@ describe('router', () => {
     const memoryRouter = createMemoryRouter(routes, { initialEntries: ['/review'] })
 
     render(<RouterProvider router={memoryRouter} />)
-    expect(await screen.findByRole('link', { name: /课程列表/ })).toBeInTheDocument()
+    expect(await screen.findByLabelText('搜索课程')).toBeInTheDocument()
     expect(screen.getByRole('button', { name: /报名咨询/ })).toBeInTheDocument()
   })
 
@@ -133,7 +133,7 @@ describe('router', () => {
 
     render(<RouterProvider router={memoryRouter} />)
 
-    expect(await screen.findByRole('heading', { name: '课程列表' })).toBeInTheDocument()
+    expect(await screen.findByLabelText('搜索课程')).toBeInTheDocument()
     expect(memoryRouter.state.location.pathname).toBe('/courses')
     expect(memoryRouter.state.location.search).toBe('?query=COMP9311&page=2')
     expect(memoryRouter.state.location.hash).toBe('#filters')
@@ -152,7 +152,28 @@ describe('router', () => {
       await memoryRouter.navigate('/admin')
     })
 
-    expect(await screen.findByText('IRBTree Admin')).toBeInTheDocument()
-    expect(screen.getByRole('link', { name: '工作台' })).toBeInTheDocument()
+    expect((await screen.findAllByRole('heading', { name: '课程管理' })).length).toBeGreaterThan(0)
+    expect(memoryRouter.state.location.pathname).toBe('/admin/courses')
+    expect(screen.getByRole('link', { name: '课程管理' })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: '系统设置' })).toBeInTheDocument()
+  })
+
+  it('shows the system submenu and admin header actions', async () => {
+    const routes = (router as unknown as { routes: RouteObject[] }).routes
+    const memoryRouter = createMemoryRouter(routes, { initialEntries: ['/auth'] })
+
+    render(<RouterProvider router={memoryRouter} />)
+
+    fireEvent.click(await screen.findByRole('button', { name: '进入演示系统' }))
+
+    await act(async () => {
+      await memoryRouter.navigate('/admin/messages')
+    })
+
+    expect((await screen.findAllByRole('heading', { name: '消息管理' })).length).toBeGreaterThan(0)
+    expect(screen.getByRole('button', { name: '通知' })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: '管理员菜单' })).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: '消息管理' })).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: '系统日志' })).toBeInTheDocument()
   })
 })

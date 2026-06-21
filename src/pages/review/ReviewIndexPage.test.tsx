@@ -30,7 +30,7 @@ describe('ReviewIndexPage', () => {
       </AuthContext.Provider>,
     )
 
-    expect(await screen.findByRole('heading', { name: '课程列表' })).toBeInTheDocument()
+    expect(await screen.findByLabelText('搜索课程')).toBeInTheDocument()
     expect(await screen.findByText('Database Systems')).toBeInTheDocument()
     expect(screen.getByLabelText('搜索课程')).toHaveValue('SQL')
     expect(screen.queryByText('Principles of Programming')).not.toBeInTheDocument()
