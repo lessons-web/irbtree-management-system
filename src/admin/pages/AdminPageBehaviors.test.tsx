@@ -1,13 +1,7 @@
 import { act, fireEvent, render, screen, waitFor, within } from '@testing-library/react'
-import { Outlet, RouterProvider, createMemoryRouter } from 'react-router'
+import { Outlet, RouterProvider, createMemoryRouter, type RouteObject } from 'react-router'
 import { describe, expect, it } from 'vitest'
-import AdminLayout from '../AdminLayout'
-import CoursesAdminPage from './courses/CoursesAdminPage'
-import LogsAdminPage from './logs/LogsAdminPage'
-import MessagesAdminPage from './messages/MessagesAdminPage'
-import ReviewsAdminPage from './reviews/ReviewsAdminPage'
-import UsersAdminPage from './users/UsersAdminPage'
-import { RequireRole } from '../../features/auth/guards'
+import { router } from '../../app/router'
 import { AuthContext, type AuthState } from '../../features/auth/state'
 
 const adminAuthState: AuthState = {
@@ -24,37 +18,28 @@ const adminAuthState: AuthState = {
 }
 
 function renderAdminAt(initialEntry: string) {
-  const memoryRouter = createMemoryRouter(
-    [
-      {
-        path: '/',
+  const wrapRootWithAdminAuth = (routes: RouteObject[]): RouteObject[] =>
+    routes.map((route, index) => {
+      const clonedRoute: RouteObject = {
+        ...route,
+        children: route.children ? wrapRootWithAdminAuth(route.children) : undefined,
+      }
+
+      if (index !== 0 || route.path !== '/') {
+        return clonedRoute
+      }
+
+      return {
+        ...clonedRoute,
         element: (
           <AuthContext.Provider value={adminAuthState}>
             <Outlet />
           </AuthContext.Provider>
         ),
-        children: [
-          {
-            path: 'admin',
-            element: <RequireRole anyOf={['admin', 'teacher']} />,
-            children: [
-              {
-                element: <AdminLayout />,
-                children: [
-                  { path: 'courses', element: <CoursesAdminPage /> },
-                  { path: 'messages', element: <MessagesAdminPage /> },
-                  { path: 'logs', element: <LogsAdminPage /> },
-                  { path: 'reviews', element: <ReviewsAdminPage /> },
-                  { path: 'users', element: <UsersAdminPage /> },
-                ],
-              },
-            ],
-          },
-        ],
-      },
-    ],
-    { initialEntries: [initialEntry] },
-  )
+      }
+    })
+
+  const memoryRouter = createMemoryRouter(wrapRootWithAdminAuth(router.routes), { initialEntries: [initialEntry] })
 
   render(<RouterProvider router={memoryRouter} />)
 
@@ -68,8 +53,18 @@ function renderAdminAt(initialEntry: string) {
 }
 
 describe('Admin page behaviors', () => {
+  it('keeps review and system pages reachable under grouped admin routes', async () => {
+    const { navigateTo } = renderAdminAt('/admin/review-management/reviews')
+
+    expect(await screen.findByRole('heading', { name: '评价管理' })).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: '系统管理' })).toBeInTheDocument()
+
+    await navigateTo('/admin/system-management/users')
+    expect(await screen.findByRole('heading', { name: '用户管理' })).toBeInTheDocument()
+  })
+
   it('writes a runtime notification and runtime log after an admin operation', async () => {
-    const { navigateTo } = renderAdminAt('/admin/messages')
+    const { navigateTo } = renderAdminAt('/admin/system-management/messages')
 
     fireEvent.click(await screen.findByRole('button', { name: '新建消息' }))
     fireEvent.change(screen.getByLabelText('标题'), { target: { value: '测试消息' } })
@@ -78,12 +73,12 @@ describe('Admin page behaviors', () => {
     fireEvent.click(screen.getByRole('button', { name: '通知' }))
     expect(await screen.findByText('已创建消息：测试消息')).toBeInTheDocument()
 
-    await navigateTo('/admin/logs')
+    await navigateTo('/admin/system-management/logs')
     expect(await screen.findByText('创建消息《测试消息》')).toBeInTheDocument()
   })
 
   it('keeps a created message after navigating to logs and back to messages', async () => {
-    const { navigateTo } = renderAdminAt('/admin/messages')
+    const { navigateTo } = renderAdminAt('/admin/system-management/messages')
 
     fireEvent.click(await screen.findByRole('button', { name: '新建消息' }))
     fireEvent.change(screen.getByLabelText('标题'), { target: { value: '往返保留消息' } })
@@ -91,15 +86,15 @@ describe('Admin page behaviors', () => {
 
     expect(await screen.findByText('往返保留消息')).toBeInTheDocument()
 
-    await navigateTo('/admin/logs')
+    await navigateTo('/admin/system-management/logs')
     expect(await screen.findByText('创建消息《往返保留消息》')).toBeInTheDocument()
 
-    await navigateTo('/admin/messages')
+    await navigateTo('/admin/system-management/messages')
     expect(await screen.findByText('往返保留消息')).toBeInTheDocument()
   })
 
   it('creates a course and shows it in the courses table', async () => {
-    renderAdminAt('/admin/courses')
+    renderAdminAt('/admin/course-center/courses')
 
     fireEvent.click(await screen.findByRole('button', { name: '新增课程' }))
     fireEvent.change(screen.getByRole('combobox', { name: '所属院校' }), { target: { value: 'UNSW' } })
@@ -117,7 +112,7 @@ describe('Admin page behaviors', () => {
   })
 
   it('renders separate course code and course name columns', async () => {
-    renderAdminAt('/admin/courses')
+    renderAdminAt('/admin/course-center/courses')
 
     const courseTable = await screen.findByRole('table')
     expect(within(courseTable).getByRole('columnheader', { name: '课程代码' })).toBeInTheDocument()
@@ -125,16 +120,16 @@ describe('Admin page behaviors', () => {
   })
 
   it('shows the course page title only in the header without duplicate page copy in the content area', () => {
-    renderAdminAt('/admin/courses')
+    renderAdminAt('/admin/course-center/courses')
 
-    expect(screen.getAllByRole('heading', { name: '课程管理' })).toHaveLength(1)
-    expect(screen.getByRole('heading', { level: 1, name: '课程管理' })).toBeInTheDocument()
-    expect(screen.queryByRole('heading', { level: 2, name: '课程管理' })).not.toBeInTheDocument()
-    expect(screen.queryByText('维护课程信息、教师与状态，作为后台默认首页展示。')).not.toBeInTheDocument()
+    expect(screen.getAllByRole('heading', { name: '课程列表' })).toHaveLength(1)
+    expect(screen.getByRole('heading', { level: 1, name: '课程列表' })).toBeInTheDocument()
+    expect(screen.queryByRole('heading', { level: 2, name: '课程列表' })).not.toBeInTheDocument()
+    expect(screen.queryByText('统一维护课程主数据，并作为评课、学员、题库的共享引用源。')).not.toBeInTheDocument()
   })
 
   it('shows 18 courses with 11 total table rows on the first page and 9 total rows after switching to the second page', async () => {
-    renderAdminAt('/admin/courses')
+    renderAdminAt('/admin/course-center/courses')
 
     const firstPageTable = await screen.findByRole('table')
     expect(within(firstPageTable).getAllByRole('row')).toHaveLength(11)
@@ -149,7 +144,7 @@ describe('Admin page behaviors', () => {
   })
 
   it('uses choice-based fields in the course drawer', async () => {
-    renderAdminAt('/admin/courses')
+    renderAdminAt('/admin/course-center/courses')
 
     fireEvent.click(await screen.findByRole('button', { name: '新增课程' }))
 
@@ -173,7 +168,7 @@ describe('Admin page behaviors', () => {
   })
 
   it('requires selecting a university before creating a course', async () => {
-    renderAdminAt('/admin/courses')
+    renderAdminAt('/admin/course-center/courses')
 
     fireEvent.click(await screen.findByRole('button', { name: '新增课程' }))
     fireEvent.change(screen.getByLabelText('课程代码'), { target: { value: 'COMP7777' } })
@@ -185,7 +180,7 @@ describe('Admin page behaviors', () => {
   })
 
   it('edits a course and writes a runtime notification and log', async () => {
-    const { navigateTo } = renderAdminAt('/admin/courses')
+    const { navigateTo } = renderAdminAt('/admin/course-center/courses')
 
     fireEvent.click((await screen.findAllByRole('button', { name: '编辑' }))[0])
     fireEvent.change(screen.getByLabelText('课程名称'), { target: { value: 'Principles of Programming Studio' } })
@@ -197,12 +192,12 @@ describe('Admin page behaviors', () => {
     fireEvent.click(screen.getByRole('button', { name: '通知' }))
     expect(await screen.findByText('已更新课程：COMP9021 Principles of Programming Studio')).toBeInTheDocument()
 
-    await navigateTo('/admin/logs')
+    await navigateTo('/admin/system-management/logs')
     expect(await screen.findByText('编辑课程《COMP9021 Principles of Programming Studio》')).toBeInTheDocument()
   })
 
   it('offlines a course and writes a runtime notification and log', async () => {
-    const { navigateTo } = renderAdminAt('/admin/courses')
+    const { navigateTo } = renderAdminAt('/admin/course-center/courses')
 
     const courseTable = await screen.findByRole('table')
     const courseCode = within(courseTable).getByText('COMP9021')
@@ -221,12 +216,12 @@ describe('Admin page behaviors', () => {
     fireEvent.click(screen.getByRole('button', { name: '通知' }))
     expect(await screen.findByText('已下线课程：COMP9021 Principles of Programming')).toBeInTheDocument()
 
-    await navigateTo('/admin/logs')
+    await navigateTo('/admin/system-management/logs')
     expect(await screen.findByText('下线课程《COMP9021 Principles of Programming》')).toBeInTheDocument()
   })
 
   it('does not append duplicate notifications or logs when offlining an already disabled course', async () => {
-    const { navigateTo } = renderAdminAt('/admin/courses')
+    const { navigateTo } = renderAdminAt('/admin/course-center/courses')
 
     const courseTable = await screen.findByRole('table')
     const targetRow = within(courseTable).getByText('COMP9021').closest('tr') as HTMLElement
@@ -247,12 +242,12 @@ describe('Admin page behaviors', () => {
     fireEvent.click(screen.getByRole('button', { name: '通知' }))
     expect(await screen.findAllByText('已下线课程：COMP9021 Principles of Programming')).toHaveLength(1)
 
-    await navigateTo('/admin/logs')
+    await navigateTo('/admin/system-management/logs')
     expect(screen.getAllByText('下线课程《COMP9021 Principles of Programming》')).toHaveLength(1)
   })
 
   it('updates the moderation badge after approving a review', async () => {
-    renderAdminAt('/admin/reviews')
+    renderAdminAt('/admin/review-management/reviews')
 
     const reviewTable = await screen.findByRole('table')
     const authorCell = within(reviewTable).getByText('Alex Student')
@@ -269,7 +264,7 @@ describe('Admin page behaviors', () => {
   })
 
   it('shows the four review rating dimensions in the detail drawer', async () => {
-    renderAdminAt('/admin/reviews')
+    renderAdminAt('/admin/review-management/reviews')
 
     const reviewTable = await screen.findByRole('table')
     const targetRow = within(reviewTable).getByText('Alex Student').closest('tr') as HTMLElement
@@ -287,7 +282,7 @@ describe('Admin page behaviors', () => {
   })
 
   it('rejects a review through a confirmation step and writes notification and log', async () => {
-    const { navigateTo } = renderAdminAt('/admin/reviews')
+    const { navigateTo } = renderAdminAt('/admin/review-management/reviews')
 
     const reviewTable = await screen.findByRole('table')
     const targetRow = within(reviewTable).getByText('Alex Student').closest('tr') as HTMLElement
@@ -305,12 +300,12 @@ describe('Admin page behaviors', () => {
     fireEvent.click(screen.getByRole('button', { name: '通知' }))
     expect(await screen.findByText('已驳回 Alex Student 在 COMP9021 下提交的评价')).toBeInTheDocument()
 
-    await navigateTo('/admin/logs')
+    await navigateTo('/admin/system-management/logs')
     expect(await screen.findByText('驳回评价《COMP9021 Alex Student》')).toBeInTheDocument()
   })
 
   it('bulk approves pending reviews through a confirmation step and writes notification and log', async () => {
-    const { navigateTo } = renderAdminAt('/admin/reviews')
+    const { navigateTo } = renderAdminAt('/admin/review-management/reviews')
 
     fireEvent.click(await screen.findByRole('button', { name: '批量治理' }))
     fireEvent.click(screen.getByRole('button', { name: '批量通过待复核' }))
@@ -323,12 +318,12 @@ describe('Admin page behaviors', () => {
     fireEvent.click(screen.getByRole('button', { name: '通知' }))
     expect(await screen.findByText('已批量通过 1 条待复核评价')).toBeInTheDocument()
 
-    await navigateTo('/admin/logs')
+    await navigateTo('/admin/system-management/logs')
     expect(await screen.findByText('批量通过 1 条评价')).toBeInTheDocument()
   })
 
   it('bulk rejects high risk reviews through a confirmation step and writes notification and log', async () => {
-    const { navigateTo } = renderAdminAt('/admin/reviews')
+    const { navigateTo } = renderAdminAt('/admin/review-management/reviews')
 
     fireEvent.click(await screen.findByRole('button', { name: '批量治理' }))
     fireEvent.change(screen.getByLabelText('批量驳回原因'), { target: { value: '命中高风险词，需人工复核后再发布' } })
@@ -342,12 +337,12 @@ describe('Admin page behaviors', () => {
     fireEvent.click(screen.getByRole('button', { name: '通知' }))
     expect(await screen.findByText('已批量驳回 1 条高风险评价')).toBeInTheDocument()
 
-    await navigateTo('/admin/logs')
+    await navigateTo('/admin/system-management/logs')
     expect(await screen.findByText('批量驳回 1 条高风险评价')).toBeInTheDocument()
   })
 
   it('writes a runtime notification and log after updating a user role', async () => {
-    const { navigateTo } = renderAdminAt('/admin/users')
+    const { navigateTo } = renderAdminAt('/admin/system-management/users')
 
     const userTable = await screen.findByRole('table')
     const targetRow = within(userTable).getByText('Alex Student').closest('tr') as HTMLElement
@@ -363,12 +358,12 @@ describe('Admin page behaviors', () => {
     fireEvent.click(screen.getByRole('button', { name: '通知' }))
     expect(await screen.findByText('已更新账号：Alex Student，角色调整为管理员')).toBeInTheDocument()
 
-    await navigateTo('/admin/logs')
+    await navigateTo('/admin/system-management/logs')
     expect(await screen.findByText('编辑账号《Alex Student》：角色调整为管理员')).toBeInTheDocument()
   })
 
   it('keeps updated user state after navigating away and back to users', async () => {
-    const { navigateTo } = renderAdminAt('/admin/users')
+    const { navigateTo } = renderAdminAt('/admin/system-management/users')
 
     const userTable = await screen.findByRole('table')
     const targetRow = within(userTable).getByText('Alex Student').closest('tr') as HTMLElement
@@ -377,17 +372,17 @@ describe('Admin page behaviors', () => {
     fireEvent.click(await screen.findByLabelText('管理员'))
     fireEvent.click(screen.getByRole('button', { name: '保存账号' }))
 
-    await navigateTo('/admin/logs')
+    await navigateTo('/admin/system-management/logs')
     expect(await screen.findByText('编辑账号《Alex Student》：角色调整为管理员')).toBeInTheDocument()
 
-    await navigateTo('/admin/users')
+    await navigateTo('/admin/system-management/users')
     const returnedTable = await screen.findByRole('table')
     const returnedRow = within(returnedTable).getByText('Alex Student').closest('tr') as HTMLElement
     expect(within(returnedRow).getByText('管理员')).toBeInTheDocument()
   })
 
   it('prevents the current admin from changing their own role or disabling themselves', async () => {
-    renderAdminAt('/admin/users')
+    renderAdminAt('/admin/system-management/users')
 
     const userTable = await screen.findByRole('table')
     const selfRow = within(userTable).getByText('Admin User').closest('tr') as HTMLElement
@@ -404,7 +399,7 @@ describe('Admin page behaviors', () => {
   })
 
   it('does not treat another account with the admin email as self when ids differ', async () => {
-    renderAdminAt('/admin/users')
+    renderAdminAt('/admin/system-management/users')
 
     const userTable = await screen.findByRole('table')
     const alexRow = within(userTable).getByText('Alex Student').closest('tr') as HTMLElement
@@ -425,7 +420,7 @@ describe('Admin page behaviors', () => {
   })
 
   it('writes edit notification and log copy based on the actual changed fields', async () => {
-    const { navigateTo } = renderAdminAt('/admin/users')
+    const { navigateTo } = renderAdminAt('/admin/system-management/users')
 
     const userTable = await screen.findByRole('table')
     const targetRow = within(userTable).getByText('Alex Student').closest('tr') as HTMLElement
@@ -442,12 +437,12 @@ describe('Admin page behaviors', () => {
     expect(await screen.findByText('已更新账号：Alex Prime，更新项：昵称')).toBeInTheDocument()
     expect(screen.queryByText(/角色调整/)).not.toBeInTheDocument()
 
-    await navigateTo('/admin/logs')
+    await navigateTo('/admin/system-management/logs')
     expect(await screen.findByText('编辑账号《Alex Student》：更新昵称')).toBeInTheDocument()
   })
 
   it('does not append duplicate notifications or logs when disabling an already disabled account', async () => {
-    const { navigateTo } = renderAdminAt('/admin/users')
+    const { navigateTo } = renderAdminAt('/admin/system-management/users')
 
     const userTable = await screen.findByRole('table')
     const targetRow = within(userTable).getByText('Alex Student').closest('tr') as HTMLElement
@@ -463,12 +458,12 @@ describe('Admin page behaviors', () => {
     fireEvent.click(screen.getByRole('button', { name: '通知' }))
     expect(await screen.findAllByText('已停用账号：Alex Student')).toHaveLength(1)
 
-    await navigateTo('/admin/logs')
+    await navigateTo('/admin/system-management/logs')
     expect(screen.getAllByText('停用账号《Alex Student》')).toHaveLength(1)
   })
 
   it('updates a user role and disables a user from the user drawer', async () => {
-    const { navigateTo } = renderAdminAt('/admin/users')
+    const { navigateTo } = renderAdminAt('/admin/system-management/users')
 
     const userTable = await screen.findByRole('table')
     const targetRow = within(userTable).getByText('Alex Student').closest('tr') as HTMLElement
@@ -491,7 +486,7 @@ describe('Admin page behaviors', () => {
     fireEvent.click(screen.getByRole('button', { name: '通知' }))
     expect(await screen.findByText('已停用账号：Alex Student')).toBeInTheDocument()
 
-    await navigateTo('/admin/logs')
+    await navigateTo('/admin/system-management/logs')
     expect(await screen.findByText('停用账号《Alex Student》')).toBeInTheDocument()
   })
 })

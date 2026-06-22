@@ -1,12 +1,22 @@
 import type {
   AdminOption,
   AdminStatusTone,
+  ClassGroupAdminRow,
   CourseAdminRow,
   CourseDraft,
+  EnrollmentAdminRow,
+  ExamPaperAdminRow,
+  ExamProblemAdminRow,
   LogAdminRow,
   MessageAdminRow,
+  PaymentAdminRow,
+  ProblemAdminRow,
+  ProblemAssetAdminRow,
+  ProblemTagAdminRow,
   ReviewAdminRow,
   SemesterAdminRow,
+  StudentAdminRow,
+  StudentNoteAdminRow,
   TagAdminRow,
   TeacherAdminRow,
   UniversityAdminRow,
@@ -682,6 +692,209 @@ export const userRows: UserAdminRow[] = [
     status: '重点账号',
     statusTone: 'info',
     searchText: 'Admin User 管理员 admin admin@irbtree.com',
+  },
+]
+
+export const studentRows: StudentAdminRow[] = [
+  {
+    id: 'student-alex',
+    name: 'Alex Student',
+    email: 'alex.student@irbtree.com',
+    phone: '0400 000 001',
+    status: 'active',
+    registeredAt: '2026-01-08',
+  },
+  {
+    id: 'student-mia',
+    name: 'Mia Chen',
+    email: 'mia.chen@irbtree.com',
+    phone: '0400 000 002',
+    status: 'active',
+    registeredAt: '2025-11-22',
+  },
+]
+
+export const enrollmentRows: EnrollmentAdminRow[] = [
+  {
+    id: 'enrollment-alex-comp9021',
+    studentId: 'student-alex',
+    courseId: 'course-comp9021',
+    validFrom: '2026-02-01',
+    validUntil: '2026-08-01',
+    status: 'active',
+    source: '人工开通',
+  },
+  {
+    id: 'enrollment-alex-comp9311',
+    studentId: 'student-alex',
+    courseId: 'course-comp9311',
+    validFrom: '2026-03-15',
+    validUntil: '2026-09-15',
+    status: 'active',
+    source: '续费开通',
+  },
+  {
+    id: 'enrollment-mia-info1110',
+    studentId: 'student-mia',
+    courseId: 'course-info1110',
+    validFrom: '2026-01-20',
+    validUntil: '2026-07-20',
+    status: 'pending',
+    source: '报名待确认',
+  },
+]
+
+export const paymentRows: PaymentAdminRow[] = [
+  {
+    id: 'payment-alex-comp9021',
+    studentId: 'student-alex',
+    courseId: 'course-comp9021',
+    amount: 899,
+    currency: 'AUD',
+    method: 'bank-transfer',
+    paidAt: '2026-02-01 10:30',
+    operator: 'Admin User',
+    status: 'paid',
+    note: '首期报名缴费',
+  },
+  {
+    id: 'payment-alex-comp9311',
+    studentId: 'student-alex',
+    courseId: 'course-comp9311',
+    amount: 699,
+    currency: 'AUD',
+    method: 'credit-card',
+    paidAt: '2026-03-15 14:10',
+    operator: 'Mia Chen',
+    status: 'paid',
+    note: '数据库课程续费',
+  },
+]
+
+export const studentNoteRows: StudentNoteAdminRow[] = [
+  {
+    id: 'student-note-alex-1',
+    studentId: 'student-alex',
+    content: '已完成入学沟通，确认本学期以算法与数据库课程为主。',
+    createdAt: '2026-02-01 11:00',
+    createdBy: 'Admin User',
+  },
+  {
+    id: 'student-note-mia-1',
+    studentId: 'student-mia',
+    content: '等待补充身份材料后再完成正式开通。',
+    createdAt: '2026-01-21 09:20',
+    createdBy: 'Mia Chen',
+  },
+]
+
+export const classGroupRows: ClassGroupAdminRow[] = [
+  {
+    id: 'class-group-comp9021-a',
+    name: 'COMP9021 周末强化班',
+    courseId: 'course-comp9021',
+    teacherId: 'teacher-james',
+    status: 'active',
+  },
+  {
+    id: 'class-group-comp9311-b',
+    name: 'COMP9311 冲刺答疑班',
+    courseId: 'course-comp9311',
+    teacherId: 'teacher-daniel',
+    status: 'active',
+  },
+]
+
+export const problemRows: ProblemAdminRow[] = [
+  {
+    id: 'problem-recursion-trace',
+    courseId: 'course-comp9021',
+    title: '递归调用追踪',
+    type: 'short-answer',
+    difficulty: 'easy',
+    status: 'published',
+    source: '讲义例题',
+    answer: '按调用栈展开并回溯输出结果。',
+    analysis: '考察递归终止条件和回溯阶段的执行顺序。',
+  },
+  {
+    id: 'problem-sql-join-design',
+    courseId: 'course-comp9311',
+    title: 'SQL Join 关系建模',
+    type: 'sql',
+    difficulty: 'medium',
+    status: 'draft',
+    source: '历史真题改编',
+    answer: '使用多表连接与聚合计算完成查询。',
+    analysis: '覆盖实体关系建模、连接条件与聚合过滤。',
+  },
+]
+
+export const problemTagRows: ProblemTagAdminRow[] = [
+  {
+    id: 'problem-tag-recursion',
+    name: '递归',
+    scope: '编程基础',
+    status: 'active',
+  },
+  {
+    id: 'problem-tag-sql',
+    name: 'SQL',
+    scope: '数据库',
+    status: 'active',
+  },
+]
+
+export const examPaperRows: ExamPaperAdminRow[] = [
+  {
+    id: 'exam-paper-comp9021-midterm',
+    courseId: 'course-comp9021',
+    name: 'COMP9021 期中模拟卷',
+    durationMinutes: 90,
+    status: 'published',
+  },
+  {
+    id: 'exam-paper-comp9311-final',
+    courseId: 'course-comp9311',
+    name: 'COMP9311 期末训练卷',
+    durationMinutes: 120,
+    status: 'draft',
+  },
+]
+
+export const examProblemRows: ExamProblemAdminRow[] = [
+  {
+    id: 'exam-problem-comp9021-1',
+    examId: 'exam-paper-comp9021-midterm',
+    problemId: 'problem-recursion-trace',
+    score: 20,
+    sortOrder: 1,
+  },
+  {
+    id: 'exam-problem-comp9311-1',
+    examId: 'exam-paper-comp9311-final',
+    problemId: 'problem-sql-join-design',
+    score: 30,
+    sortOrder: 1,
+  },
+]
+
+export const problemAssetRows: ProblemAssetAdminRow[] = [
+  {
+    id: 'problem-asset-recursion-template',
+    problemId: 'problem-recursion-trace',
+    fileName: 'recursion_template.py',
+    fileType: 'python',
+    url: '/assets/problem-bank/recursion_template.py',
+    status: 'active',
+  },
+  {
+    id: 'problem-asset-sql-schema',
+    problemId: 'problem-sql-join-design',
+    fileName: 'schema.sql',
+    fileType: 'sql',
+    url: '/assets/problem-bank/schema.sql',
+    status: 'active',
   },
 ]
 

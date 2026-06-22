@@ -214,10 +214,11 @@ describe('router', () => {
       await memoryRouter.navigate('/admin')
     })
 
-    expect((await screen.findAllByRole('heading', { name: '课程管理' })).length).toBeGreaterThan(0)
-    expect(memoryRouter.state.location.pathname).toBe('/admin/courses')
-    expect(screen.getByRole('link', { name: '课程管理' })).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: '系统设置' })).toBeInTheDocument()
+    expect((await screen.findAllByRole('heading', { name: '课程列表' })).length).toBeGreaterThan(0)
+    expect(memoryRouter.state.location.pathname).toBe('/admin/course-center/courses')
+    expect(screen.getByRole('link', { name: '课程中心' })).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: '课程列表' })).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: '系统管理' })).toBeInTheDocument()
   })
 
   it('shows the system submenu and admin header actions', async () => {
@@ -229,7 +230,7 @@ describe('router', () => {
     fireEvent.click(await screen.findByRole('button', { name: '进入演示系统' }))
 
     await act(async () => {
-      await memoryRouter.navigate('/admin/messages')
+      await memoryRouter.navigate('/admin/system-management/messages')
     })
 
     expect((await screen.findAllByRole('heading', { name: '消息管理' })).length).toBeGreaterThan(0)

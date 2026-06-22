@@ -1,10 +1,14 @@
-import { createBrowserRouter, Navigate, Outlet } from 'react-router'
+import { createBrowserRouter, Outlet } from 'react-router'
 import AdminLayout from '../admin/AdminLayout'
+import { adminDefaultPath } from '../admin/config/navigation'
+import CourseRelationsPage from '../admin/pages/course-center/CourseRelationsPage'
 import CoursesAdminPage from '../admin/pages/courses/CoursesAdminPage'
 import LogsAdminPage from '../admin/pages/logs/LogsAdminPage'
 import MessagesAdminPage from '../admin/pages/messages/MessagesAdminPage'
 import ReviewsAdminPage from '../admin/pages/reviews/ReviewsAdminPage'
 import SemestersAdminPage from '../admin/pages/semesters/SemestersAdminPage'
+import StudentDetailPage from '../admin/pages/students/StudentDetailPage'
+import StudentsAdminPage from '../admin/pages/students/StudentsAdminPage'
 import TagsAdminPage from '../admin/pages/tags/TagsAdminPage'
 import TeachersAdminPage from '../admin/pages/teachers/TeachersAdminPage'
 import UniversitiesAdminPage from '../admin/pages/universities/UniversitiesAdminPage'
@@ -67,16 +71,58 @@ export const router = createBrowserRouter([
           {
             element: <AdminLayout />,
             children: [
-              { index: true, element: <Navigate to="/admin/courses" replace /> },
-              { path: 'courses', Component: CoursesAdminPage },
-              { path: 'reviews', Component: ReviewsAdminPage },
-              { path: 'universities', Component: UniversitiesAdminPage },
-              { path: 'teachers', Component: TeachersAdminPage },
-              { path: 'semesters', Component: SemestersAdminPage },
-              { path: 'tags', Component: TagsAdminPage },
-              { path: 'users', Component: UsersAdminPage },
-              { path: 'messages', Component: MessagesAdminPage },
-              { path: 'logs', Component: LogsAdminPage },
+              { index: true, element: <PathAlias to={adminDefaultPath} /> },
+              {
+                path: 'course-center',
+                children: [
+                  { index: true, element: <PathAlias to={adminDefaultPath} /> },
+                  { path: 'courses', Component: CoursesAdminPage },
+                  { path: 'relations', Component: CourseRelationsPage },
+                ],
+              },
+              {
+                path: 'review-management',
+                children: [
+                  { index: true, element: <PathAlias to="/admin/review-management/reviews" /> },
+                  { path: 'reviews', Component: ReviewsAdminPage },
+                  { path: 'universities', Component: UniversitiesAdminPage },
+                  { path: 'teachers', Component: TeachersAdminPage },
+                  { path: 'semesters', Component: SemestersAdminPage },
+                ],
+              },
+              {
+                path: 'student-management',
+                children: [
+                  { index: true, element: <PathAlias to="/admin/student-management/students" /> },
+                  { path: 'students', Component: StudentsAdminPage },
+                  { path: 'students/:studentId', Component: StudentDetailPage },
+                ],
+              },
+              {
+                path: 'problem-bank',
+                children: [
+                  { index: true, element: <PathAlias to="/admin/problem-bank/tags" /> },
+                  { path: 'tags', Component: TagsAdminPage },
+                ],
+              },
+              {
+                path: 'system-management',
+                children: [
+                  { index: true, element: <PathAlias to="/admin/system-management/users" /> },
+                  { path: 'users', Component: UsersAdminPage },
+                  { path: 'messages', Component: MessagesAdminPage },
+                  { path: 'logs', Component: LogsAdminPage },
+                ],
+              },
+              { path: 'courses', element: <PathAlias to={adminDefaultPath} /> },
+              { path: 'reviews', element: <PathAlias to="/admin/review-management/reviews" /> },
+              { path: 'universities', element: <PathAlias to="/admin/review-management/universities" /> },
+              { path: 'teachers', element: <PathAlias to="/admin/review-management/teachers" /> },
+              { path: 'semesters', element: <PathAlias to="/admin/review-management/semesters" /> },
+              { path: 'tags', element: <PathAlias to="/admin/problem-bank/tags" /> },
+              { path: 'users', element: <PathAlias to="/admin/system-management/users" /> },
+              { path: 'messages', element: <PathAlias to="/admin/system-management/messages" /> },
+              { path: 'logs', element: <PathAlias to="/admin/system-management/logs" /> },
             ],
           },
         ],

@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react'
-import { buildCourseSearchText, courseRows, statusOptions, teacherRows, universityOptions } from '../../data'
+import { buildCourseSearchText, statusOptions, universityOptions } from '../../data'
 import {
   AdminActionButtons,
   AdminConfirmModal,
@@ -17,7 +17,6 @@ import {
 } from '../../components/AdminScaffold'
 import AdminField from '../../components/AdminField'
 import { useAdminRuntime } from '../../context/AdminRuntimeContext'
-import { useAdminEntityCollection } from '../../hooks/useAdminEntityCollection'
 import { useAdminPageFilters } from '../../hooks/useAdminPageFilters'
 import { getUserPresentation, useAuth } from '../../../features/auth/state'
 import type { AdminColumn, CourseAdminRow, CourseDraft } from '../../types/admin'
@@ -44,13 +43,13 @@ function toCourseUniversityOptionValue(value: string) {
 export default function CoursesAdminPage() {
   const { user } = useAuth()
   const presentation = getUserPresentation(user)
-  const { appendOperation } = useAdminRuntime()
-  const { createEntity, rows, setActiveRow, updateEntity, activeRow } = useAdminEntityCollection(courseRows)
+  const { appendOperation, courses: rows, createCourse, updateCourse, teachers } = useAdminRuntime()
   const [query, setQuery] = useState('')
   const [selectedUniversity, setSelectedUniversity] = useState('all')
   const [selectedStatus, setSelectedStatus] = useState('all')
   const [drawerOpen, setDrawerOpen] = useState(false)
   const [draft, setDraft] = useState<CourseDraft>(baseCourseDraft)
+  const [activeRow, setActiveRow] = useState<CourseAdminRow | null>(null)
   const [confirmingRow, setConfirmingRow] = useState<CourseAdminRow | null>(null)
 
   const { filteredRows, pagedRows, safePage, setPage } = useAdminPageFilters({
@@ -90,17 +89,17 @@ export default function CoursesAdminPage() {
 
   const teacherOptions = useMemo(
     () =>
-      teacherRows.map((teacher) => ({
+      teachers.map((teacher) => ({
         value: teacher.name,
         label: `${teacher.name} (${teacher.title})`,
       })),
-    [],
+    [teachers],
   )
 
   const tutorOptions = useMemo(() => {
     const tutors = new Set<string>()
 
-    teacherRows.forEach((teacher) => tutors.add(teacher.name))
+    teachers.forEach((teacher) => tutors.add(teacher.name))
     rows.forEach((row) => {
       row.tutor
         .split(',')
@@ -110,7 +109,7 @@ export default function CoursesAdminPage() {
     })
 
     return [...tutors].map((value) => ({ value, label: value }))
-  }, [rows])
+  }, [rows, teachers])
 
   const selectedTutors = useMemo(
     () =>
@@ -171,7 +170,7 @@ export default function CoursesAdminPage() {
     if (!nextDraft.code || !nextDraft.name || !nextDraft.university) return
 
     if (activeRow) {
-      updateEntity(activeRow.id, (current) => ({
+      updateCourse(activeRow.id, (current) => ({
         ...current,
         ...nextDraft,
         searchText: buildCourseSearchText(nextDraft),
@@ -184,7 +183,7 @@ export default function CoursesAdminPage() {
         actor: presentation.name,
       })
     } else {
-      createEntity({
+      createCourse({
         id: `course-${nextDraft.code.toLowerCase()}-${Date.now()}`,
         ...nextDraft,
         status: '已上线',
@@ -220,7 +219,7 @@ export default function CoursesAdminPage() {
       return
     }
 
-    updateEntity(confirmingRow.id, (current) => ({
+    updateCourse(confirmingRow.id, (current) => ({
       ...current,
       status: '已停用',
       statusTone: 'danger',
@@ -238,8 +237,8 @@ export default function CoursesAdminPage() {
   return (
     <>
       <AdminPageFrame
-        title="课程管理"
-        description="维护课程信息、教师与状态，作为后台默认首页展示。"
+        title="课程列表"
+        description="统一维护课程主数据，并作为评课、学员、题库的共享引用源。"
         query={query}
         onQueryChange={setQuery}
         searchPlaceholder="搜索课程代码或名称..."

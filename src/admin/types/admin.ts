@@ -189,4 +189,118 @@ export type MessageDraft = {
   content: string
 }
 
+export type StudentAdminStatus = 'active' | 'inactive'
+
+export type EnrollmentAdminStatus = 'active' | 'expired' | 'pending'
+
+export type PaymentAdminStatus = 'paid' | 'pending' | 'refunded'
+
+export type ClassGroupAdminStatus = 'active' | 'archived'
+
+export type ProblemDifficulty = 'easy' | 'medium' | 'hard'
+
+export type ProblemAdminStatus = 'draft' | 'published'
+
+export type ProblemTagStatus = 'active' | 'inactive'
+
+export type ExamPaperAdminStatus = 'draft' | 'published'
+
+export type ProblemAssetStatus = 'active' | 'archived'
+
+export type StudentAdminRow = {
+  id: string
+  name: string
+  email: string
+  phone: string
+  status: StudentAdminStatus
+  registeredAt: string
+}
+
+export type StudentRuntimeRow = StudentAdminRow & {
+  enrolledCourseCount: number
+}
+
+export type EnrollmentAdminRow = {
+  id: string
+  studentId: string
+  courseId: string
+  validFrom: string
+  validUntil: string
+  status: EnrollmentAdminStatus
+  source: string
+}
+
+export type PaymentAdminRow = {
+  id: string
+  studentId: string
+  courseId: string
+  amount: number
+  currency: string
+  method: string
+  paidAt: string
+  operator: string
+  status: PaymentAdminStatus
+  note: string
+}
+
+export type StudentNoteAdminRow = {
+  id: string
+  studentId: string
+  content: string
+  createdAt: string
+  createdBy: string
+}
+
+export type ClassGroupAdminRow = {
+  id: string
+  name: string
+  courseId: string
+  teacherId: string
+  status: ClassGroupAdminStatus
+}
+
+export type ProblemAdminRow = {
+  id: string
+  courseId: string
+  title: string
+  type: string
+  difficulty: ProblemDifficulty
+  status: ProblemAdminStatus
+  source: string
+  answer: string
+  analysis: string
+}
+
+export type ProblemTagAdminRow = {
+  id: string
+  name: string
+  scope: string
+  status: ProblemTagStatus
+}
+
+export type ExamPaperAdminRow = {
+  id: string
+  courseId: string
+  name: string
+  durationMinutes: number
+  status: ExamPaperAdminStatus
+}
+
+export type ExamProblemAdminRow = {
+  id: string
+  examId: string
+  problemId: string
+  score: number
+  sortOrder: number
+}
+
+export type ProblemAssetAdminRow = {
+  id: string
+  problemId: string
+  fileName: string
+  fileType: string
+  url: string
+  status: ProblemAssetStatus
+}
+
 export type LogAdminRow = AdminOperationLog

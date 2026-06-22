@@ -1,16 +1,11 @@
 import {
   Bell,
   BookOpen,
-  Buildings,
-  Calendar,
   CaretDown,
   CaretLeft,
   ChatText,
-  ChalkboardTeacher,
   Desktop,
-  Scroll,
   SignOut,
-  Tag,
   Users,
   Gear,
 } from '@phosphor-icons/react'
@@ -18,22 +13,16 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { NavLink, Outlet, useLocation } from 'react-router'
 import Drawer from '../components/common/Drawer'
 import { AdminRuntimeProvider, useAdminRuntime } from './context/AdminRuntimeContext'
-import { adminPageTitles, adminPrimaryNav, adminSystemNav } from './config/navigation'
+import { adminNavGroups, getAdminPageTitle } from './config/navigation'
 import { getUserPresentation, useAuth } from '../features/auth/state'
 
-const navIconsByRoute: Record<string, typeof BookOpen> = {
-  '/admin/courses': BookOpen,
-  '/admin/reviews': ChatText,
-  '/admin/universities': Buildings,
-  '/admin/teachers': ChalkboardTeacher,
-  '/admin/semesters': Calendar,
-  '/admin/tags': Tag,
-  '/admin/users': Users,
-  '/admin/messages': Bell,
-  '/admin/logs': Scroll,
+const navIconsByGroup: Record<(typeof adminNavGroups)[number]['key'], typeof BookOpen> = {
+  'course-center': BookOpen,
+  'review-management': ChatText,
+  'student-management': Users,
+  'problem-bank': Bell,
+  'system-management': Gear,
 } as const
-
-const systemNavRoutes = adminSystemNav.map((item) => item.to)
 
 function matchesAdminRoute(pathname: string, to: string) {
   return pathname === to || pathname.startsWith(`${to}/`)
@@ -52,9 +41,7 @@ function AdminLayoutContent() {
   const { user, logout } = useAuth()
   const { notifications } = useAdminRuntime()
   const presentation = getUserPresentation(user)
-  const isSystemSectionActive = systemNavRoutes.some((route) => matchesAdminRoute(pathname, route))
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false)
-  const [systemOpen, setSystemOpen] = useState(isSystemSectionActive)
   const [notificationOpen, setNotificationOpen] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
   const menuRef = useRef<HTMLDivElement | null>(null)
@@ -72,13 +59,7 @@ function AdminLayoutContent() {
     return () => document.removeEventListener('mousedown', handlePointerDown)
   }, [menuOpen])
 
-  useEffect(() => {
-    if (isSystemSectionActive) {
-      setSystemOpen(true)
-    }
-  }, [isSystemSectionActive])
-
-  const pageTitle = useMemo(() => adminPageTitles.get(pathname) ?? '后台管理', [pathname])
+  const pageTitle = useMemo(() => getAdminPageTitle(pathname), [pathname])
 
   return (
     <div className="flex h-screen overflow-hidden bg-slate-50 text-slate-800">
@@ -98,43 +79,37 @@ function AdminLayoutContent() {
         </div>
 
         <nav className="flex-1 space-y-1 overflow-y-auto px-3 py-4 text-sm font-medium text-slate-600">
-          {adminPrimaryNav.map((item) => (
-            <SidebarLink key={item.to} to={item.to} label={item.label} collapsed={sidebarCollapsed} />
-          ))}
+          {adminNavGroups.map((group) => {
+            const groupTarget = group.items[0]?.to ?? group.basePath
+            const groupActive = matchesAdminRoute(pathname, group.basePath)
 
-          <div className="pt-2">
-            <button
-              type="button"
-              onClick={() => setSystemOpen((value) => !value)}
-              className={`relative flex w-full items-center rounded-2xl px-4 py-3 transition ${
-                isSystemSectionActive
-                  ? 'bg-violet-50/70 text-violet-700'
-                  : 'text-slate-600 hover:bg-white hover:text-slate-900'
-              }`}
-              aria-label="系统设置"
-            >
-              <span
-                aria-hidden="true"
-                className={`absolute top-3 bottom-3 left-2 w-0.5 rounded-full transition ${
-                  isSystemSectionActive ? 'bg-violet-300' : 'bg-transparent'
-                }`}
-              />
-              <Gear size={20} className={`shrink-0 ${isSystemSectionActive ? 'text-violet-600' : ''}`} />
-              {!sidebarCollapsed ? (
-                <>
-                  <span className="ml-3 flex-1 text-left">系统设置</span>
-                  <CaretDown size={16} className={`transition ${systemOpen ? 'rotate-180' : ''}`} />
-                </>
-              ) : null}
-            </button>
-            {systemOpen && !sidebarCollapsed ? (
-              <div className="mt-1 space-y-1 rounded-2xl border border-violet-100/70 bg-white/80 p-2">
-                {adminSystemNav.map((item) => (
-                  <SidebarLink key={item.to} to={item.to} label={item.label} collapsed={false} inset variant="subtle" />
-                ))}
-              </div>
-            ) : null}
-          </div>
+            return (
+              <section key={group.key} aria-label={group.label} className="space-y-1">
+                <SidebarLink
+                  to={groupTarget}
+                  label={group.label}
+                  collapsed={sidebarCollapsed}
+                  active={groupActive}
+                  icon={navIconsByGroup[group.key]}
+                />
+                {!sidebarCollapsed && group.items.length > 0 ? (
+                  <div className="space-y-1 rounded-2xl border border-slate-200/70 bg-white/80 p-2">
+                    {group.items.map((item) => (
+                      <SidebarLink
+                        key={item.to}
+                        to={item.to}
+                        label={item.label}
+                        collapsed={false}
+                        inset
+                        variant="subtle"
+                        active={matchesAdminRoute(pathname, item.to)}
+                      />
+                    ))}
+                  </div>
+                ) : null}
+              </section>
+            )
+          })}
         </nav>
 
         <div className="flex items-center justify-between border-t border-slate-200/70 px-4 py-4">
@@ -243,44 +218,47 @@ function SidebarLink({
   to,
   label,
   collapsed,
+  active,
+  icon: Icon,
   inset = false,
   variant = 'primary',
 }: {
   to: string
   label: string
   collapsed: boolean
+  active: boolean
+  icon?: typeof BookOpen
   inset?: boolean
   variant?: 'primary' | 'subtle'
 }) {
-  const Icon = navIconsByRoute[to]
-
   return (
     <NavLink
       to={to}
-      className={({ isActive }) =>
-        `relative flex items-center rounded-2xl px-4 py-3 transition ${
-          inset ? 'pl-8' : ''
-        } ${
-          isActive
-            ? variant === 'subtle'
-              ? 'bg-violet-50/70 text-violet-700'
-              : 'bg-violet-50 text-violet-700 shadow-sm shadow-violet-100/70'
-            : 'text-slate-600 hover:bg-white hover:text-slate-900'
-        }`
-      }
+      className={`relative flex items-center rounded-2xl px-4 py-3 transition ${
+        inset ? 'pl-8' : ''
+      } ${
+        active
+          ? variant === 'subtle'
+            ? 'bg-violet-50/70 text-violet-700'
+            : 'bg-violet-50 text-violet-700 shadow-sm shadow-violet-100/70'
+          : 'text-slate-600 hover:bg-white hover:text-slate-900'
+      }`}
     >
-      {({ isActive }) => (
-        <>
-          <span
-            aria-hidden="true"
-            className={`absolute top-3 bottom-3 left-2 w-0.5 rounded-full transition ${
-              isActive ? (variant === 'subtle' ? 'bg-violet-300' : 'bg-violet-500') : 'bg-transparent'
-            }`}
-          />
-          <Icon size={20} className={`shrink-0 ${isActive ? 'text-violet-600' : ''}`} />
-          {!collapsed ? <span className="ml-3">{label}</span> : null}
-        </>
+      <span
+        aria-hidden="true"
+        className={`absolute top-3 bottom-3 left-2 w-0.5 rounded-full transition ${
+          active ? (variant === 'subtle' ? 'bg-violet-300' : 'bg-violet-500') : 'bg-transparent'
+        }`}
+      />
+      {Icon ? (
+        <Icon size={20} className={`shrink-0 ${active ? 'text-violet-600' : ''}`} />
+      ) : (
+        <span
+          aria-hidden="true"
+          className={`ml-1 h-1.5 w-1.5 rounded-full ${active ? 'bg-violet-500' : 'bg-slate-300'}`}
+        />
       )}
+      {!collapsed ? <span className="ml-3">{label}</span> : null}
     </NavLink>
   )
 }

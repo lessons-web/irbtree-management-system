@@ -41,11 +41,22 @@ function renderAdminAt(initialEntry: string) {
               {
                 element: <AdminLayout />,
                 children: [
-                  { path: 'logs', element: <LogsAdminPage /> },
-                  { path: 'semesters', element: <SemestersAdminPage /> },
-                  { path: 'tags', element: <TagsAdminPage /> },
-                  { path: 'teachers', element: <TeachersAdminPage /> },
-                  { path: 'universities', element: <UniversitiesAdminPage /> },
+                  {
+                    path: 'review-management',
+                    children: [
+                      { path: 'semesters', element: <SemestersAdminPage /> },
+                      { path: 'teachers', element: <TeachersAdminPage /> },
+                      { path: 'universities', element: <UniversitiesAdminPage /> },
+                    ],
+                  },
+                  {
+                    path: 'problem-bank',
+                    children: [{ path: 'tags', element: <TagsAdminPage /> }],
+                  },
+                  {
+                    path: 'system-management',
+                    children: [{ path: 'logs', element: <LogsAdminPage /> }],
+                  },
                 ],
               },
             ],
@@ -69,7 +80,7 @@ function renderAdminAt(initialEntry: string) {
 
 describe('Admin entity dialogs', () => {
   it('creates and disables a university through dialogs', async () => {
-    const { navigateTo } = renderAdminAt('/admin/universities')
+    const { navigateTo } = renderAdminAt('/admin/review-management/universities')
 
     fireEvent.click(await screen.findByRole('button', { name: '新增院校' }))
     fireEvent.change(screen.getByLabelText('院校名称'), { target: { value: 'Macquarie' } })
@@ -89,12 +100,12 @@ describe('Admin entity dialogs', () => {
     const disabledRow = within(updatedTable).getByText('Macquarie').closest('tr') as HTMLElement
     expect(within(disabledRow).getByText('已停用')).toBeInTheDocument()
 
-    await navigateTo('/admin/logs')
+    await navigateTo('/admin/system-management/logs')
     expect(await screen.findByText('停用院校《Macquarie》')).toBeInTheDocument()
   })
 
   it('creates and removes a teacher through dialogs', async () => {
-    const { navigateTo } = renderAdminAt('/admin/teachers')
+    const { navigateTo } = renderAdminAt('/admin/review-management/teachers')
 
     fireEvent.click(await screen.findByRole('button', { name: '新增教师' }))
     fireEvent.change(screen.getByLabelText('姓名'), { target: { value: 'Dr. Ruby Stone' } })
@@ -114,12 +125,12 @@ describe('Admin entity dialogs', () => {
     const updatedTable = await screen.findByRole('table')
     expect(within(updatedTable).queryByText('Dr. Ruby Stone')).not.toBeInTheDocument()
 
-    await navigateTo('/admin/logs')
+    await navigateTo('/admin/system-management/logs')
     expect(await screen.findByText('移除教师《Dr. Ruby Stone》')).toBeInTheDocument()
   })
 
   it('creates and archives a semester through dialogs', async () => {
-    const { navigateTo } = renderAdminAt('/admin/semesters')
+    const { navigateTo } = renderAdminAt('/admin/review-management/semesters')
 
     fireEvent.click(await screen.findByRole('button', { name: '新增学期' }))
     fireEvent.change(screen.getByLabelText('学期名称'), { target: { value: '2026 T3' } })
@@ -138,12 +149,12 @@ describe('Admin entity dialogs', () => {
     const archivedRow = within(updatedTable).getByText('2026 T3').closest('tr') as HTMLElement
     expect(within(archivedRow).getByText('已归档')).toBeInTheDocument()
 
-    await navigateTo('/admin/logs')
+    await navigateTo('/admin/system-management/logs')
     expect(await screen.findByText('归档学期《2026 T3》')).toBeInTheDocument()
   })
 
   it('creates, edits and offlines a tag through dialogs', async () => {
-    const { navigateTo } = renderAdminAt('/admin/tags')
+    const { navigateTo } = renderAdminAt('/admin/problem-bank/tags')
 
     fireEvent.click(await screen.findByRole('button', { name: '新增标签' }))
     fireEvent.change(screen.getByLabelText('标签名称'), { target: { value: '实战强' } })
@@ -172,7 +183,7 @@ describe('Admin entity dialogs', () => {
     const offlineRow = within(updatedTable).getByText('实战强').closest('tr') as HTMLElement
     expect(within(offlineRow).getByText('已下线')).toBeInTheDocument()
 
-    await navigateTo('/admin/logs')
+    await navigateTo('/admin/system-management/logs')
     expect(await screen.findByText('下线标签《实战强》')).toBeInTheDocument()
   })
 })

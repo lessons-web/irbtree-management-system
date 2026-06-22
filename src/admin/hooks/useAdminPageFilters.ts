@@ -1,10 +1,11 @@
-import { useEffect, useMemo, useState, type DependencyList } from 'react'
+import { useEffect, useMemo, useRef, useState, type DependencyList } from 'react'
 
 type UseAdminPageFiltersOptions<T> = {
   rows: T[]
   pageSize: number
   predicate: (row: T) => boolean
   resetDeps?: DependencyList
+  initialPage?: number
 }
 
 export function useAdminPageFilters<T>({
@@ -12,10 +13,17 @@ export function useAdminPageFilters<T>({
   pageSize,
   predicate,
   resetDeps = [],
+  initialPage = 1,
 }: UseAdminPageFiltersOptions<T>) {
-  const [page, setPage] = useState(1)
+  const [page, setPage] = useState(initialPage)
+  const hasMountedRef = useRef(false)
 
   useEffect(() => {
+    if (!hasMountedRef.current) {
+      hasMountedRef.current = true
+      return
+    }
+
     setPage(1)
   }, resetDeps)
 
