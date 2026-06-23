@@ -1,11 +1,9 @@
-import { Bell, CaretDown, ShieldCheck, SignOut, Sparkle, SquaresFour, UserCircle } from '@phosphor-icons/react'
+import { Bell, CaretDown, ShieldCheck, Sparkle, SquaresFour, UserCircle } from '@phosphor-icons/react'
 import { useEffect, useRef, useState } from 'react'
 import { NavLink } from 'react-router'
-import { useProtectedNavigation } from '../../features/auth/useProtectedNavigation'
 import { getUserPresentation, useAuth } from '../../features/auth/state'
 
 type UserHeaderProps = {
-  onOpenLogin: () => void
   onOpenReview?: () => void
   onOpenCompleted?: () => void
 }
@@ -16,9 +14,8 @@ const navItems = [
   { to: '/recommendation', label: '选课推荐' },
 ]
 
-export default function UserHeader({ onOpenLogin, onOpenReview, onOpenCompleted }: UserHeaderProps) {
-  const { user, logout } = useAuth()
-  const protectedNavigate = useProtectedNavigation()
+export default function UserHeader({ onOpenReview, onOpenCompleted }: UserHeaderProps) {
+  const { user } = useAuth()
   const presentation = getUserPresentation(user)
   const [menuOpen, setMenuOpen] = useState(false)
   const menuRef = useRef<HTMLDivElement | null>(null)
@@ -52,11 +49,6 @@ export default function UserHeader({ onOpenLogin, onOpenReview, onOpenCompleted 
               key={item.to}
               to={item.to}
               end={item.end}
-              onClick={(event) => {
-                if (item.to === '/' || user) return
-                event.preventDefault()
-                protectedNavigate(item.to)
-              }}
               className={({ isActive }) =>
                 `relative flex h-16 items-center border-b-4 px-1 pt-1 text-md transition ${
                   isActive ? 'border-brand-600 text-brand-600 font-bold' : 'border-transparent text-slate-400 hover:text-slate-800'
@@ -74,107 +66,76 @@ export default function UserHeader({ onOpenLogin, onOpenReview, onOpenCompleted 
         </nav>
 
         <div className="flex items-center gap-3">
-          {user ? (
-            <div ref={menuRef} className="relative flex items-center gap-4">
-              <button
-                type="button"
-                className="hidden items-center gap-2 p-2 text-sm font-medium text-slate-500 transition hover:text-slate-800 md:inline-flex"
-                aria-label="消息中心"
-              >
-                <span className="relative inline-flex h-8 w-8 items-center justify-center rounded-full text-slate-500 transition hover:bg-slate-50">
-                  <Bell size={18} />
-                  <span className="absolute top-1.5 right-1.5 h-2.5 w-2.5 rounded-full bg-rose-500 ring-2 ring-white" />
-                </span>
-                <span>消息中心</span>
-              </button>
+          <div ref={menuRef} className="relative flex items-center gap-4">
+            <button
+              type="button"
+              className="hidden items-center gap-2 p-2 text-sm font-medium text-slate-500 transition hover:text-slate-800 md:inline-flex"
+              aria-label="消息中心"
+            >
+              <span className="relative inline-flex h-8 w-8 items-center justify-center rounded-full text-slate-500 transition hover:bg-slate-50">
+                <Bell size={18} />
+                <span className="absolute top-1.5 right-1.5 h-2.5 w-2.5 rounded-full bg-rose-500 ring-2 ring-white" />
+              </span>
+              <span>消息中心</span>
+            </button>
 
-              <div className="hidden items-end gap-3 lg:flex">
-                <div className="flex flex-col items-end">
-                  <span className="text-sm font-semibold text-slate-900">{presentation.name}</span>
-                  <span className="mt-1 inline-flex items-center gap-1 rounded-full bg-brand-50 px-2 py-0.5 text-[11px] font-medium text-brand-600">
-                    <ShieldCheck size={12} weight="fill" />
-                    {presentation.badgeLabel}
-                  </span>
-                </div>
+            <div className="hidden items-end gap-3 lg:flex">
+              <div className="flex flex-col items-end">
+                <span className="text-sm font-semibold text-slate-900">{presentation.name}</span>
+                <span className="mt-1 inline-flex items-center gap-1 rounded-full bg-brand-50 px-2 py-0.5 text-[11px] font-medium text-brand-600">
+                  <ShieldCheck size={12} weight="fill" />
+                  {presentation.badgeLabel}
+                </span>
               </div>
+            </div>
 
-              <button
-                type="button"
-                className="flex items-center gap-2 bg-transparent text-left transition hover:text-slate-800"
-                onClick={() => setMenuOpen((current) => !current)}
-                aria-haspopup="menu"
-                aria-expanded={menuOpen}
-                aria-label={`${presentation.name} 用户菜单`}
+            <button
+              type="button"
+              className="flex items-center gap-2 bg-transparent text-left transition hover:text-slate-800"
+              onClick={() => setMenuOpen((current) => !current)}
+              aria-haspopup="menu"
+              aria-expanded={menuOpen}
+              aria-label={`${presentation.name} 用户菜单`}
+            >
+              <span className="inline-flex h-10 w-10 items-center justify-center rounded-full border-2 border-brand-500 bg-white text-sm font-semibold text-brand-600">
+                {presentation.avatarText}
+              </span>
+              <CaretDown size={14} className={`text-slate-400 transition ${menuOpen ? 'rotate-180' : ''}`} />
+            </button>
+
+            {menuOpen ? (
+              <div
+                role="menu"
+                aria-label="用户菜单"
+                className="absolute right-0 top-[calc(100%+12px)] w-56 overflow-hidden rounded-2xl border border-slate-200 bg-white py-2 shadow-lg shadow-slate-900/10"
               >
-                <span className="inline-flex h-10 w-10 items-center justify-center rounded-full border-2 border-brand-500 bg-white text-sm font-semibold text-brand-600">
-                  {presentation.avatarText}
-                </span>
-                <CaretDown size={14} className={`text-slate-400 transition ${menuOpen ? 'rotate-180' : ''}`} />
-              </button>
-
-              {menuOpen ? (
-                <div
-                  role="menu"
-                  aria-label="用户菜单"
-                  className="absolute right-0 top-[calc(100%+12px)] w-56 overflow-hidden rounded-2xl border border-slate-200 bg-white py-2 shadow-lg shadow-slate-900/10"
-                >
-                  {presentation.canAccessAdmin ? (
-                    <NavLink
-                      to="/admin"
-                      className="flex items-center gap-3 px-5 py-3 text-sm font-medium text-slate-700 transition hover:bg-slate-50 hover:text-slate-900"
-                      onClick={() => setMenuOpen(false)}
-                    >
-                      <SquaresFour size={18} />
-                      进入 Admin 系统
-                    </NavLink>
-                  ) : null}
+                {presentation.canAccessAdmin ? (
                   <NavLink
-                    to="/profile"
-                    className="flex items-center gap-3 border-t border-slate-100 px-5 py-3 text-sm font-medium text-slate-700 transition hover:bg-slate-50 hover:text-slate-900"
+                    to="/admin"
+                    className="flex items-center gap-3 px-5 py-3 text-sm font-medium text-slate-700 transition hover:bg-slate-50 hover:text-slate-900"
                     onClick={() => setMenuOpen(false)}
                   >
-                    <UserCircle size={18} />
-                    个人中心
+                    <SquaresFour size={18} />
+                    进入 Admin 系统
                   </NavLink>
-                  <button
-                    type="button"
-                    role="menuitem"
-                    className="flex w-full items-center gap-3 border-t border-slate-100 px-5 py-3 text-sm font-medium text-red-500 transition hover:bg-red-50"
-                    onClick={() => {
-                      setMenuOpen(false)
-                      logout()
-                    }}
-                  >
-                    <SignOut size={18} />
-                    退出登录
-                  </button>
-                </div>
-              ) : null}
-              {onOpenReview || onOpenCompleted ? (
-                <div className="sr-only" aria-hidden="true">
-                  {onOpenReview ? 'review-enabled' : ''}
-                  {onOpenCompleted ? 'completed-enabled' : ''}
-                </div>
-              ) : null}
-            </div>
-          ) : (
-            <>
-              <button
-                type="button"
-                className="cursor-pointer px-1 py-2 text-sm font-medium text-slate-600 transition hover:text-slate-900"
-                onClick={onOpenLogin}
-              >
-                登录
-              </button>
-              <button
-                type="button"
-                className="cursor-pointer rounded-lg bg-brand-600 px-4 py-2 text-sm font-medium text-white shadow-sm transition hover:bg-brand-500"
-                onClick={onOpenLogin}
-              >
-                注册
-              </button>
-            </>
-          )}
+                ) : null}
+                <NavLink
+                  to="/profile"
+                  className="flex items-center gap-3 border-t border-slate-100 px-5 py-3 text-sm font-medium text-slate-700 transition hover:bg-slate-50 hover:text-slate-900"
+                  onClick={() => setMenuOpen(false)}
+                >
+                  <UserCircle size={18} />
+                  个人中心
+                </NavLink>
+              </div>
+            ) : null}
+            {onOpenReview || onOpenCompleted ? (
+              <div className="sr-only" aria-hidden="true">
+                {onOpenReview ? 'review-enabled' : ''}
+                {onOpenCompleted ? 'completed-enabled' : ''}
+              </div>
+            ) : null}
+          </div>
         </div>
       </div>
     </header>

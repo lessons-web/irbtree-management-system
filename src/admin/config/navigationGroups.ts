@@ -10,17 +10,14 @@ export type AdminNavGroup = {
   items: AdminNavItem[]
 }
 
-export const adminDefaultPath = '/admin/course-center/courses'
+export const adminDefaultPath = '/admin/course-center'
 
 export const adminNavGroups: AdminNavGroup[] = [
   {
     key: 'course-center',
     label: '课程中心',
-    basePath: '/admin/course-center',
-    items: [
-      { to: adminDefaultPath, label: '课程列表' },
-      { to: '/admin/course-center/relations', label: '课程关系视图' },
-    ],
+    basePath: adminDefaultPath,
+    items: [],
   },
   {
     key: 'review-management',
@@ -58,9 +55,7 @@ export const adminNavGroups: AdminNavGroup[] = [
 ]
 
 export const adminPageTitles = new Map<string, string>([
-  ['/admin/course-center', '课程列表'],
   [adminDefaultPath, '课程列表'],
-  ['/admin/course-center/relations', '课程关系视图'],
   ['/admin/review-management', '评价管理'],
   ['/admin/student-management', '学员列表'],
   ['/admin/problem-bank', '标签管理'],

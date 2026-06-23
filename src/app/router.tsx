@@ -1,7 +1,6 @@
 import { createBrowserRouter, Outlet } from 'react-router'
 import AdminLayout from '../admin/AdminLayout'
 import { adminDefaultPath } from '../admin/config/navigation'
-import CourseRelationsPage from '../admin/pages/course-center/CourseRelationsPage'
 import CoursesAdminPage from '../admin/pages/courses/CoursesAdminPage'
 import LogsAdminPage from '../admin/pages/logs/LogsAdminPage'
 import MessagesAdminPage from '../admin/pages/messages/MessagesAdminPage'
@@ -16,10 +15,8 @@ import UsersAdminPage from '../admin/pages/users/UsersAdminPage'
 import CourseDetailAlias from './CourseDetailAlias'
 import PathAlias from './PathAlias'
 import { AuthProvider } from '../features/auth/AuthContext'
-import { RequireAuth, RequireRole } from '../features/auth/guards'
 import { ReviewProvider } from '../features/review/reviewProvider'
 import UserLayout from '../layouts/UserLayout'
-import AuthPage from '../pages/auth/AuthPage'
 import CourseDetailPage from '../pages/course-detail/CourseDetailPage'
 import CoursesPage from '../pages/courses/CoursesPage'
 import HomePage from '../pages/home/HomePage'
@@ -44,42 +41,29 @@ export const router = createBrowserRouter([
         ),
         children: [
           { index: true, Component: HomePage },
-          { path: 'auth', Component: AuthPage },
+          { path: 'auth', element: <PathAlias to="/" /> },
+          { path: 'review', element: <PathAlias to="/courses" /> },
+          { path: 'review/:code', Component: CourseDetailAlias },
+          { path: 'me', element: <PathAlias to="/profile" /> },
+          { path: 'recommend', element: <PathAlias to="/recommendation" /> },
+          { path: 'courses', Component: CoursesPage },
+          { path: 'course/:code', Component: CourseDetailPage },
           {
-            element: <RequireAuth />,
-            children: [
-              { path: 'review', element: <PathAlias to="/courses" /> },
-              { path: 'review/:code', Component: CourseDetailAlias },
-              { path: 'me', element: <PathAlias to="/profile" /> },
-              { path: 'recommend', element: <PathAlias to="/recommendation" /> },
-              { path: 'courses', Component: CoursesPage },
-              { path: 'course/:code', Component: CourseDetailPage },
-              {
-                path: 'recommendation',
-                Component: RecommendationPage,
-              },
-              { path: 'profile', Component: ProfilePage },
-              { path: 'learn', Component: LearnIndexPage },
-            ],
+            path: 'recommendation',
+            Component: RecommendationPage,
           },
+          { path: 'profile', Component: ProfilePage },
+          { path: 'learn', Component: LearnIndexPage },
         ],
       },
       {
         path: 'admin',
-        element: <RequireRole anyOf={['admin', 'teacher']} />,
         children: [
           {
             element: <AdminLayout />,
             children: [
               { index: true, element: <PathAlias to={adminDefaultPath} /> },
-              {
-                path: 'course-center',
-                children: [
-                  { index: true, element: <PathAlias to={adminDefaultPath} /> },
-                  { path: 'courses', Component: CoursesAdminPage },
-                  { path: 'relations', Component: CourseRelationsPage },
-                ],
-              },
+              { path: 'course-center', Component: CoursesAdminPage },
               {
                 path: 'review-management',
                 children: [

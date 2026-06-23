@@ -7,7 +7,6 @@ import SemestersAdminPage from './semesters/SemestersAdminPage'
 import TagsAdminPage from './tags/TagsAdminPage'
 import TeachersAdminPage from './teachers/TeachersAdminPage'
 import UniversitiesAdminPage from './universities/UniversitiesAdminPage'
-import { RequireRole } from '../../features/auth/guards'
 import { AuthContext, type AuthState } from '../../features/auth/state'
 
 const adminAuthState: AuthState = {
@@ -36,7 +35,6 @@ function renderAdminAt(initialEntry: string) {
         children: [
           {
             path: 'admin',
-            element: <RequireRole anyOf={['admin', 'teacher']} />,
             children: [
               {
                 element: <AdminLayout />,

@@ -3,12 +3,10 @@ import { Link } from 'react-router'
 import { useAuth } from '../../../features/auth/state'
 import { useProtectedNavigation } from '../../../features/auth/useProtectedNavigation'
 import { enrollments, productCourses } from '../../../domain/mockData'
-import { useUserOverlay } from '../../../components/user/useUserOverlay'
 
 export default function LearningSummary() {
   const { user } = useAuth()
   const protectedNavigate = useProtectedNavigation()
-  const { openLogin } = useUserOverlay()
 
   function handleLearnNavigation(event: React.MouseEvent<HTMLAnchorElement>) {
     event.preventDefault()
@@ -27,9 +25,9 @@ export default function LearningSummary() {
             <button
               type="button"
               className="inline-flex items-center justify-center rounded-xl bg-slate-900 px-5 py-2.5 text-sm font-medium text-white hover:bg-slate-800"
-              onClick={() => openLogin()}
+              onClick={() => protectedNavigate('/learn')}
             >
-              去登录
+              去学习
             </button>
           </div>
         </div>

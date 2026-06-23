@@ -5,7 +5,6 @@ import {
   CaretLeft,
   ChatText,
   Desktop,
-  SignOut,
   Users,
   Gear,
 } from '@phosphor-icons/react'
@@ -38,7 +37,7 @@ export default function AdminLayout() {
 
 function AdminLayoutContent() {
   const { pathname } = useLocation()
-  const { user, logout } = useAuth()
+  const { user } = useAuth()
   const { notifications } = useAdminRuntime()
   const presentation = getUserPresentation(user)
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false)
@@ -64,12 +63,12 @@ function AdminLayoutContent() {
   return (
     <div className="flex h-screen overflow-hidden bg-slate-50 text-slate-800">
       <aside
-        className={`hidden shrink-0 border-r border-slate-200/80 bg-slate-50/95 transition-all duration-300 lg:flex lg:flex-col ${
+        className={`hidden shrink-0 border-r border-slate-200 bg-white transition-all duration-300 lg:flex lg:flex-col ${
           sidebarCollapsed ? 'w-24' : 'w-72'
         }`}
       >
-        <div className="flex items-center gap-3 border-b border-slate-200/70 px-5 py-5">
-          <img src="/favicon.svg" alt="" aria-hidden="true" className="h-10 w-10 rounded-2xl bg-white p-1.5 ring-1 ring-slate-200/80" />
+        <div className="flex h-16 items-center gap-3 border-b border-slate-200 px-5">
+          <img src="/favicon.svg" alt="" aria-hidden="true" className="h-9 w-9 bg-white p-1 ring-1 ring-slate-200" />
           {!sidebarCollapsed ? (
             <div className="min-w-0">
               <p className="truncate text-base font-semibold text-slate-900">IRBTree Admin</p>
@@ -93,7 +92,7 @@ function AdminLayoutContent() {
                   icon={navIconsByGroup[group.key]}
                 />
                 {!sidebarCollapsed && group.items.length > 0 ? (
-                  <div className="space-y-1 rounded-2xl border border-slate-200/70 bg-white/80 p-2">
+                  <div className="space-y-1 border-l border-slate-200 pl-4">
                     {group.items.map((item) => (
                       <SidebarLink
                         key={item.to}
@@ -131,7 +130,7 @@ function AdminLayoutContent() {
       </aside>
 
       <div className="flex min-w-0 flex-1 flex-col">
-        <header className="flex h-16 items-center justify-between border-b border-slate-200/70 bg-slate-50/80 px-4 sm:px-6 lg:px-8">
+        <header className="flex h-16 items-center justify-between border-b border-slate-200 bg-white px-4 sm:px-6 lg:px-8">
           <h1 className="text-lg font-semibold text-slate-900">{pageTitle}</h1>
 
           <div className="flex items-center gap-4">
@@ -173,17 +172,6 @@ function AdminLayoutContent() {
                     <Desktop size={18} />
                     切换到用户端
                   </NavLink>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setMenuOpen(false)
-                      logout()
-                    }}
-                    className="flex w-full items-center gap-3 border-t border-slate-100 px-4 py-3 text-sm font-medium text-rose-600 transition hover:bg-rose-50"
-                  >
-                    <SignOut size={18} />
-                    退出登录
-                  </button>
                 </div>
               ) : null}
             </div>
@@ -234,28 +222,28 @@ function SidebarLink({
   return (
     <NavLink
       to={to}
-      className={`relative flex items-center rounded-2xl px-4 py-3 transition ${
-        inset ? 'pl-8' : ''
+      className={`relative flex items-center px-4 py-3 transition ${
+        inset ? 'pl-5' : ''
       } ${
         active
           ? variant === 'subtle'
-            ? 'bg-violet-50/70 text-violet-700'
-            : 'bg-violet-50 text-violet-700 shadow-sm shadow-violet-100/70'
-          : 'text-slate-600 hover:bg-white hover:text-slate-900'
+            ? 'bg-brand-50 text-brand-700'
+            : 'bg-brand-50 text-brand-700'
+          : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
       }`}
     >
       <span
         aria-hidden="true"
-        className={`absolute top-3 bottom-3 left-2 w-0.5 rounded-full transition ${
-          active ? (variant === 'subtle' ? 'bg-violet-300' : 'bg-violet-500') : 'bg-transparent'
+        className={`absolute top-2 bottom-2 left-0 w-0.5 transition ${
+          active ? (variant === 'subtle' ? 'bg-brand-300' : 'bg-brand-500') : 'bg-transparent'
         }`}
       />
       {Icon ? (
-        <Icon size={20} className={`shrink-0 ${active ? 'text-violet-600' : ''}`} />
+        <Icon size={20} className={`shrink-0 ${active ? 'text-brand-600' : ''}`} />
       ) : (
         <span
           aria-hidden="true"
-          className={`ml-1 h-1.5 w-1.5 rounded-full ${active ? 'bg-violet-500' : 'bg-slate-300'}`}
+          className={`ml-1 h-1.5 w-1.5 ${active ? 'bg-brand-500' : 'bg-slate-300'}`}
         />
       )}
       {!collapsed ? <span className="ml-3">{label}</span> : null}

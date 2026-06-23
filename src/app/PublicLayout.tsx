@@ -1,6 +1,5 @@
 import type { ReactNode } from 'react'
 import { NavLink, Outlet } from 'react-router'
-import { useAuth } from '../features/auth/state'
 
 export type PublicLayoutNavItem = {
   to: string
@@ -31,8 +30,6 @@ export default function PublicLayout({
   containerClassName,
   mainClassName,
 }: PublicLayoutProps) {
-  const { user, logout } = useAuth()
-
   return (
     <div className="flex min-h-screen flex-col bg-slate-50 text-slate-800">
       <header className={headerClassName ?? 'sticky top-0 z-40 border-b border-slate-200 bg-white'}>
@@ -48,22 +45,6 @@ export default function PublicLayout({
                 </NavLink>
               ))}
             </nav>
-            {user ? (
-              <button
-                type="button"
-                className="rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-800 hover:bg-slate-50"
-                onClick={logout}
-              >
-                退出
-              </button>
-            ) : (
-              <NavLink
-                to="/auth"
-                className="rounded-xl bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-800"
-              >
-                登录
-              </NavLink>
-            )}
           </div>
         </div>
       </header>

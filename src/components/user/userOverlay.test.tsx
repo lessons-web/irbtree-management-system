@@ -73,27 +73,21 @@ function renderWithOverlay(ui: React.ReactNode) {
 }
 
 describe('UserOverlayProvider', () => {
-  it('opens login modal for protected actions and resumes the action after login', () => {
+  it('runs protected actions directly without opening a login modal', () => {
     renderWithOverlay(<ProtectedActionProbe />)
 
     fireEvent.click(screen.getByRole('button', { name: '触发受保护动作' }))
 
-    expect(screen.getByRole('dialog', { name: '请先登录' })).toBeInTheDocument()
-    expect(screen.getByTestId('protected-count')).toHaveTextContent('0')
-
-    fireEvent.click(screen.getByRole('button', { name: '立即登录' }))
-
+    expect(screen.queryByRole('dialog', { name: '请先登录' })).not.toBeInTheDocument()
     expect(screen.getByTestId('protected-count')).toHaveTextContent('1')
   })
 
-  it('routes unauthenticated review intent through login modal and then opens the shared review drawer', () => {
+  it('opens the shared review drawer directly', () => {
     renderWithOverlay(<ReviewFlowProbe />)
 
     fireEvent.click(screen.getByRole('button', { name: '打开写评价' }))
-    expect(screen.getByRole('dialog', { name: '请先登录' })).toBeInTheDocument()
 
-    fireEvent.click(screen.getByRole('button', { name: '立即登录' }))
-
+    expect(screen.queryByRole('dialog', { name: '请先登录' })).not.toBeInTheDocument()
     expect(screen.getByRole('dialog', { name: '写评价' })).toHaveTextContent('COMP9021 Principles of Programming')
 
     fireEvent.change(screen.getByLabelText('评论内容'), { target: { value: '登录后直接进入公共写评价抽屉。' } })
@@ -102,7 +96,7 @@ describe('UserOverlayProvider', () => {
     expect(screen.getByTestId('review-content')).toHaveTextContent('登录后直接进入公共写评价抽屉。')
   })
 
-  it('opens completed drawer after login and keeps shared completed state readable and writable', () => {
+  it('opens completed drawer directly and keeps shared completed state readable and writable', () => {
     renderWithOverlay(<CompletedFlowProbe />)
 
     expect(screen.getByTestId('completed-count')).toHaveTextContent('4')
@@ -111,9 +105,7 @@ describe('UserOverlayProvider', () => {
     expect(screen.getByTestId('completed-count')).toHaveTextContent('0')
 
     fireEvent.click(screen.getByRole('button', { name: '打开已修课程' }))
-    expect(screen.getByRole('dialog', { name: '请先登录' })).toBeInTheDocument()
-
-    fireEvent.click(screen.getByRole('button', { name: '立即登录' }))
+    expect(screen.queryByRole('dialog', { name: '请先登录' })).not.toBeInTheDocument()
     expect(screen.getByRole('dialog', { name: '我已修的课程' })).toBeInTheDocument()
 
     fireEvent.change(screen.getByLabelText('学期'), { target: { value: 'S1' } })

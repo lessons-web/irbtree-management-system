@@ -14,10 +14,10 @@ export default function UserLayout() {
 }
 
 function UserLayoutContent() {
-  const { openCompleted, openLogin } = useUserOverlay()
+  const { openCompleted } = useUserOverlay()
   return (
     <div className="flex min-h-screen flex-col bg-slate-50 text-slate-800">
-      <UserHeader onOpenLogin={() => openLogin()} onOpenCompleted={openCompleted} />
+      <UserHeader onOpenCompleted={openCompleted} />
       <main className="w-full flex-1">
         <Outlet />
       </main>

@@ -6,7 +6,6 @@ import { AuthProvider } from '../../features/auth/AuthContext'
 import { AuthContext, type AuthState } from '../../features/auth/state'
 import CompletedCourseDrawer, { type CompletedCourseItem } from './CompletedCourseDrawer'
 import FloatingConsultButton from './FloatingConsultButton'
-import LoginModal from './LoginModal'
 import ReviewDrawer from './ReviewDrawer'
 import UserFooter from './UserFooter'
 import UserHeader from './UserHeader'
@@ -45,10 +44,10 @@ function ControlledCompletedDrawerHarness() {
 }
 
 describe('task3 user shells', () => {
-  it('renders header navigation and footer links', () => {
+  it('renders header navigation and footer links in demo-user mode', () => {
     renderWithAuth(
       <>
-        <UserHeader onOpenLogin={vi.fn()} />
+        <UserHeader />
         <UserFooter />
       </>,
     )
@@ -58,12 +57,13 @@ describe('task3 user shells', () => {
     expect(screen.getByRole('link', { name: '首页' })).toBeInTheDocument()
     expect(screen.getByRole('link', { name: '课程列表' })).toBeInTheDocument()
     expect(screen.getByRole('link', { name: '选课推荐' })).toBeInTheDocument()
-    expect(screen.queryByRole('link', { name: '个人中心' })).not.toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: '登录' })).not.toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: '注册' })).not.toBeInTheDocument()
     expect(screen.getByRole('link', { name: '联系支持' })).toBeInTheDocument()
   })
 
   it('falls back to the courses link instead of opening a placeholder review flow from header', () => {
-    renderLoggedIn(<UserHeader onOpenLogin={vi.fn()} onOpenCompleted={vi.fn()} />)
+    renderLoggedIn(<UserHeader onOpenCompleted={vi.fn()} />)
 
     expect(screen.queryByRole('link', { name: '写评价' })).not.toBeInTheDocument()
     expect(screen.queryByRole('button', { name: '写评价' })).not.toBeInTheDocument()
@@ -77,25 +77,14 @@ describe('task3 user shells', () => {
   })
 
   it('opens the logged-in user dropdown with admin, profile and logout entries', () => {
-    renderLoggedIn(<UserHeader onOpenLogin={vi.fn()} onOpenCompleted={vi.fn()} />)
+    renderLoggedIn(<UserHeader onOpenCompleted={vi.fn()} />)
 
     fireEvent.click(screen.getByRole('button', { name: /alex student/i }))
 
     const menu = screen.getByRole('menu')
     expect(within(menu).getByRole('link', { name: '进入 Admin 系统' })).toHaveAttribute('href', '/admin')
     expect(within(menu).getByRole('link', { name: '个人中心' })).toHaveAttribute('href', '/profile')
-    expect(within(menu).getByRole('menuitem', { name: '退出登录' })).toBeInTheDocument()
-  })
-
-  it('submits mock login and closes the modal', () => {
-    const handleClose = vi.fn()
-
-    renderWithAuth(<LoginModal open onClose={handleClose} />)
-
-    fireEvent.click(screen.getByRole('button', { name: '立即登录' }))
-
-    expect(handleClose).toHaveBeenCalled()
-    expect(screen.getByText(/当前用户：Alex Student · alex\.student@irbtree\.com/i)).toBeInTheDocument()
+    expect(within(menu).queryByRole('menuitem', { name: '退出登录' })).not.toBeInTheDocument()
   })
 
   it('submits review payload from the drawer', () => {

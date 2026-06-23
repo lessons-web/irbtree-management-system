@@ -25,7 +25,7 @@ describe('router', () => {
     expect(screen.getAllByRole('button', { name: /课程咨询|报名咨询/ })).toHaveLength(1)
   })
 
-  it('keeps users on home when unauthenticated header navigation is clicked and resumes after login', async () => {
+  it('navigates from the home header to courses without requiring login', async () => {
     const routes = (router as unknown as { routes: RouteObject[] }).routes
     const memoryRouter = createMemoryRouter(routes, { initialEntries: ['/'] })
 
@@ -34,16 +34,11 @@ describe('router', () => {
 
     fireEvent.click(screen.getByRole('link', { name: '课程列表' }))
 
-    expect(screen.getByRole('dialog', { name: '请先登录' })).toBeInTheDocument()
-    expect(memoryRouter.state.location.pathname).toBe('/')
-
-    fireEvent.click(screen.getByRole('button', { name: '立即登录' }))
-
     expect(await screen.findByLabelText('搜索课程')).toBeInTheDocument()
     expect(memoryRouter.state.location.pathname).toBe('/courses')
   })
 
-  it('keeps users on home when unauthenticated featured course card is clicked and resumes after login', async () => {
+  it('opens featured course cards directly from home', async () => {
     const routes = (router as unknown as { routes: RouteObject[] }).routes
     const memoryRouter = createMemoryRouter(routes, { initialEntries: ['/'] })
 
@@ -52,21 +47,14 @@ describe('router', () => {
 
     fireEvent.click(screen.getByRole('link', { name: /COMP9021/i }))
 
-    expect(screen.getByRole('dialog', { name: '请先登录' })).toBeInTheDocument()
-    expect(memoryRouter.state.location.pathname).toBe('/')
-
-    fireEvent.click(screen.getByRole('button', { name: '立即登录' }))
-
     expect(await screen.findByRole('heading', { name: /COMP9021 Principles of Programming/i })).toBeInTheDocument()
   })
 
   it('keeps the floating consult button on non-home routes', async () => {
     const routes = (router as unknown as { routes: RouteObject[] }).routes
-    const memoryRouter = createMemoryRouter(routes, { initialEntries: ['/auth'] })
+    const memoryRouter = createMemoryRouter(routes, { initialEntries: ['/courses'] })
 
     render(<RouterProvider router={memoryRouter} />)
-
-    fireEvent.click(await screen.findByRole('button', { name: '进入演示系统' }))
     await act(async () => {
       await memoryRouter.navigate('/review')
     })
@@ -77,14 +65,9 @@ describe('router', () => {
 
   it('persists shared review state across routes in the same router', async () => {
     const routes = (router as unknown as { routes: RouteObject[] }).routes
-    const memoryRouter = createMemoryRouter(routes, { initialEntries: ['/auth'] })
+    const memoryRouter = createMemoryRouter(routes, { initialEntries: ['/course/COMP9021'] })
 
     render(<RouterProvider router={memoryRouter} />)
-
-    fireEvent.click(await screen.findByRole('button', { name: '进入演示系统' }))
-    await act(async () => {
-      await memoryRouter.navigate('/course/COMP9021')
-    })
 
     expect(await screen.findByRole('heading', { name: /COMP9021 Principles of Programming/i })).toBeInTheDocument()
     expect(screen.getByText('2 条评价')).toBeInTheDocument()
@@ -104,11 +87,9 @@ describe('router', () => {
 
   it('keeps alias routes landing on the new implementations', async () => {
     const routes = (router as unknown as { routes: RouteObject[] }).routes
-    const memoryRouter = createMemoryRouter(routes, { initialEntries: ['/auth'] })
+    const memoryRouter = createMemoryRouter(routes, { initialEntries: ['/'] })
 
     render(<RouterProvider router={memoryRouter} />)
-
-    fireEvent.click(await screen.findByRole('button', { name: '进入演示系统' }))
 
     await act(async () => {
       await memoryRouter.navigate('/review/COMP9021')
@@ -134,11 +115,9 @@ describe('router', () => {
 
   it('preserves query and hash when legacy alias routes redirect', async () => {
     const routes = (router as unknown as { routes: RouteObject[] }).routes
-    const memoryRouter = createMemoryRouter(routes, { initialEntries: ['/auth'] })
+    const memoryRouter = createMemoryRouter(routes, { initialEntries: ['/'] })
 
     render(<RouterProvider router={memoryRouter} />)
-
-    fireEvent.click(await screen.findByRole('button', { name: '进入演示系统' }))
 
     await act(async () => {
       await memoryRouter.navigate('/review/COMP9021?from=legacy#notes')
@@ -168,28 +147,23 @@ describe('router', () => {
     expect(memoryRouter.state.location.hash).toBe('#result')
   })
 
-  it('redirects unauthenticated direct visits for all non-home user routes to auth', async () => {
+  it('allows direct visits to non-home user routes without redirecting to auth', async () => {
     const routes = (router as unknown as { routes: RouteObject[] }).routes
     const memoryRouter = createMemoryRouter(routes, { initialEntries: ['/courses?query=COMP9311#filters'] })
 
     render(<RouterProvider router={memoryRouter} />)
 
-    expect(await screen.findByRole('heading', { name: /进入 IRBTree 演示系统/ })).toBeInTheDocument()
-    expect(memoryRouter.state.location.pathname).toBe('/auth')
-    expect(memoryRouter.state.location.state?.from).toEqual({
-      pathname: '/courses',
-      search: '?query=COMP9311',
-      hash: '#filters',
-    })
+    expect(await screen.findByLabelText('搜索课程')).toBeInTheDocument()
+    expect(memoryRouter.state.location.pathname).toBe('/courses')
+    expect(memoryRouter.state.location.search).toBe('?query=COMP9311')
+    expect(memoryRouter.state.location.hash).toBe('#filters')
   })
 
   it('preserves query and hash for the legacy review list alias', async () => {
     const routes = (router as unknown as { routes: RouteObject[] }).routes
-    const memoryRouter = createMemoryRouter(routes, { initialEntries: ['/auth'] })
+    const memoryRouter = createMemoryRouter(routes, { initialEntries: ['/'] })
 
     render(<RouterProvider router={memoryRouter} />)
-
-    fireEvent.click(await screen.findByRole('button', { name: '进入演示系统' }))
 
     await act(async () => {
       await memoryRouter.navigate('/review?query=COMP9311&page=2#filters')
@@ -202,41 +176,39 @@ describe('router', () => {
     expect(screen.getByLabelText('搜索课程')).toHaveValue('COMP9311')
   })
 
-  it('lets the fixed demo account reach the admin system after login', async () => {
+  it('lets the fixed demo account reach the admin system by default', async () => {
     const routes = (router as unknown as { routes: RouteObject[] }).routes
-    const memoryRouter = createMemoryRouter(routes, { initialEntries: ['/auth'] })
+    const memoryRouter = createMemoryRouter(routes, { initialEntries: ['/admin'] })
 
     render(<RouterProvider router={memoryRouter} />)
 
-    fireEvent.click(await screen.findByRole('button', { name: '进入演示系统' }))
-
-    await act(async () => {
-      await memoryRouter.navigate('/admin')
-    })
-
     expect((await screen.findAllByRole('heading', { name: '课程列表' })).length).toBeGreaterThan(0)
-    expect(memoryRouter.state.location.pathname).toBe('/admin/course-center/courses')
+    expect(memoryRouter.state.location.pathname).toBe('/admin/course-center')
     expect(screen.getByRole('link', { name: '课程中心' })).toBeInTheDocument()
-    expect(screen.getByRole('link', { name: '课程列表' })).toBeInTheDocument()
+    expect(screen.queryByRole('link', { name: '课程列表' })).not.toBeInTheDocument()
     expect(screen.getByRole('link', { name: '系统管理' })).toBeInTheDocument()
   })
 
   it('shows the system submenu and admin header actions', async () => {
     const routes = (router as unknown as { routes: RouteObject[] }).routes
-    const memoryRouter = createMemoryRouter(routes, { initialEntries: ['/auth'] })
+    const memoryRouter = createMemoryRouter(routes, { initialEntries: ['/admin/system-management/messages'] })
 
     render(<RouterProvider router={memoryRouter} />)
-
-    fireEvent.click(await screen.findByRole('button', { name: '进入演示系统' }))
-
-    await act(async () => {
-      await memoryRouter.navigate('/admin/system-management/messages')
-    })
 
     expect((await screen.findAllByRole('heading', { name: '消息管理' })).length).toBeGreaterThan(0)
     expect(screen.getByRole('button', { name: '通知' })).toBeInTheDocument()
     expect(screen.getByRole('button', { name: '管理员菜单' })).toBeInTheDocument()
     expect(screen.getByRole('link', { name: '消息管理' })).toBeInTheDocument()
     expect(screen.getByRole('link', { name: '系统日志' })).toBeInTheDocument()
+  })
+
+  it('redirects the legacy auth path back to home', async () => {
+    const routes = (router as unknown as { routes: RouteObject[] }).routes
+    const memoryRouter = createMemoryRouter(routes, { initialEntries: ['/auth'] })
+
+    render(<RouterProvider router={memoryRouter} />)
+
+    expect(await screen.findByRole('heading', { name: /拒绝挂科/ })).toBeInTheDocument()
+    expect(memoryRouter.state.location.pathname).toBe('/')
   })
 })

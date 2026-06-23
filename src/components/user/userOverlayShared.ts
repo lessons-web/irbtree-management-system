@@ -7,13 +7,8 @@ export type ReviewOverlayRequest = {
   onSubmit: (payload: ReviewDrawerSubmitPayload) => void
 }
 
-export type LoginOptions = {
-  afterLogin?: () => void
-}
-
 export type UserOverlayContextValue = {
   completedCourses: CompletedCourseItem[]
-  openLogin: (options?: LoginOptions) => void
   openReview: (request: ReviewOverlayRequest) => boolean
   openCompleted: () => boolean
   closeCompleted: () => void
